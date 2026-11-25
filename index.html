@@ -1,0 +1,1345 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>免費 SEO＋GEO 雙效網站健檢｜犬哥網站</title>
+<meta name="description" content="免費 SEO＋GEO 雙效健檢：AI 提及分析、網站體質分析、關鍵字現況分析，贈送完整報告。關鍵字與 AI 摘要雙重保證，未達標暫停收款並免費延期。">
+<link rel="icon" type="image/png" href="images/dog-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --char:#1C1C1C;      /* 簡報主深色 */
+  --char-2:#262626;
+  --char-3:#333;
+  --fog:#EDEDED;       /* 簡報淺灰底 */
+  --white:#FFFFFF;
+  --lime:#E6FF44;      /* 官網品牌色 --e-global-color-0ad1e50 */
+  --lime-d:#C9E21F;
+  --violet:#9B6EEA;    /* 重點紫 */
+  --lavender:#DCD3F0;
+  --butter:#F8EDB8;
+  --plum:#4B3F66;      /* 標籤深紫 */
+  --text:#1C1C1C;
+  --text-2:#555;
+  --mute:#8A8A8A;
+  --head:"Noto Sans TC",sans-serif;   /* 官網大標題：思源黑體 700（英數也用思源黑體字形） */
+  --eyebrow:"Montserrat","Noto Sans TC",sans-serif;   /* 官網只在 16px 小眉標用 Montserrat 500 */
+  --sans:"Noto Sans TC",sans-serif;   /* 官網內文：思源黑體 */
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--fog);color:var(--text);font-family:var(--sans);line-height:1.75;letter-spacing:.02em;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+/* 斷句控制：同一句話盡量不拆行，只在標點後換行 */
+.nw{display:inline-block}
+h1,h2,h3,h4,.sub{text-wrap:balance}
+p,li{text-wrap:pretty}
+.wrap{width:min(1180px,100% - 40px);margin-inline:auto;position:relative;z-index:1}
+h1,h2,h3{font-family:var(--head);line-height:1.3;letter-spacing:.04em}
+h2{font-size:clamp(1.8rem,3.8vw,2.8rem);font-weight:700}
+.sub{font-family:var(--head);font-weight:700;font-size:clamp(1rem,1.8vw,1.3rem);color:var(--text-2);margin-top:.4rem}
+.dark .sub{color:#BDBDBD}
+.kicker{font-size:.78rem;font-weight:700;letter-spacing:.16em;color:var(--mute);text-transform:uppercase;line-height:1.5}
+.offer{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .8rem;font-family:var(--eyebrow);font-weight:700;font-size:1rem;letter-spacing:.06em;color:#E8E8E8}
+.offer .badge{background:var(--lime);color:var(--char);padding:.25rem .8rem;border-radius:999px;font-size:.92rem}
+.hl{color:var(--violet);font-weight:700}
+.dark .hl{color:var(--lime)}
+.mk{background:linear-gradient(transparent 55%,var(--lime) 55%);padding:0 .1em}
+
+/* glass spheres (簡報泡泡) */
+.sphere{position:absolute;border-radius:50%;pointer-events:none;z-index:0}
+.dark .sphere{background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.16),rgba(255,255,255,.03) 45%,rgba(0,0,0,.25) 75%);box-shadow:inset -20px -30px 60px rgba(0,0,0,.5), inset 10px 10px 40px rgba(255,255,255,.06)}
+.light .sphere{background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.95),rgba(255,255,255,.3) 45%,rgba(200,200,200,.25) 75%);box-shadow:inset -20px -30px 60px rgba(0,0,0,.05), 0 30px 60px -30px rgba(0,0,0,.12)}
+
+section{scroll-margin-top:78px;position:relative;overflow:hidden;padding:clamp(4rem,8vw,6.5rem) 0}
+.dark{background:var(--char);color:var(--white)}
+.light{background:var(--fog)}
+.head{margin-bottom:2.8rem}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5em;background:var(--lime);color:var(--char);font-weight:700;font-size:1.05rem;
+  padding:1rem 1.8rem;border-radius:999px;text-decoration:none;border:0;cursor:pointer;font-family:var(--sans);letter-spacing:.04em;
+  transition:transform .15s, box-shadow .2s, background .2s;box-shadow:0 10px 30px -10px rgba(230,255,68,.55)}
+.btn:hover{transform:translateY(-2px);background:#EEFF66;box-shadow:0 16px 36px -10px rgba(230,255,68,.7)}
+.btn:active{transform:translateY(1px)}
+.btn .ar{transition:transform .2s}.btn:hover .ar{transform:translateY(3px)}
+.btn-line{background:transparent;color:inherit;box-shadow:inset 0 0 0 1.5px currentColor}
+.btn-line:hover{background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1.5px currentColor}
+.light .btn{box-shadow:0 8px 0 -2px var(--char)}
+.light .btn:hover{box-shadow:0 10px 0 -2px var(--char)}
+
+/* top bar */
+.top{position:sticky;top:0;z-index:50;background:rgba(28,28,28,.9);backdrop-filter:blur(10px);color:#fff;border-bottom:1px solid #333}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;height:78px}
+.brand{display:flex;align-items:center;gap:14px;text-decoration:none}
+.avatar{width:40px;height:40px;border-radius:50%;display:block;flex:none}
+.brand .avatar{width:50px;height:50px}
+.brand .t{font-family:var(--sans);font-weight:700;font-size:28px;letter-spacing:.12em;line-height:1;color:#fff}
+@media (max-width:600px){.top .wrap{height:64px}.brand .avatar{width:40px;height:40px}.brand .t{font-size:22px}}
+.top .btn{padding:.6rem 1.2rem;font-size:.92rem}
+
+/* hero */
+.hero{padding:clamp(3.5rem,8vw,6.5rem) 0 clamp(4rem,8vw,6.5rem)}
+.hero .wrap{display:grid;grid-template-columns:1fr 1.05fr;gap:clamp(1.5rem,3vw,2.5rem);align-items:center}
+.hero h1{font-size:clamp(2rem,4.6vw,3.6rem);font-weight:700;margin:1.2rem 0 1.4rem}
+.hero h1 em{font-style:normal;color:var(--lime)}
+.hero .lead{color:#CFCFCF;font-size:1.1rem;max-width:32em}
+.ticks{list-style:none;display:grid;gap:.6rem;margin:1.8rem 0 2.2rem}
+.ticks li{position:relative;padding-left:2.1em;font-weight:500}
+.ticks li::before{content:"";position:absolute;left:0;top:.22em;width:22px;height:22px;border-radius:50%;background:var(--lime) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231C1C1C' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center/13px no-repeat}
+.cta-row{display:flex;flex-wrap:wrap;gap:1rem}
+.micro{font-size:.85rem;color:#9A9A9A;margin-top:1rem}
+
+/* 首屏主視覺：3D 傾斜的 AI 搜尋卡＋Google 排名卡＋AI 平台卡，外圍紫／黃兩圈軌道與浮動標籤
+   全部尺寸用 em（1em = 主視覺寬度的 1/66），跟著容器寬度等比縮放，手機也不會跑版
+   各元素的基本角度放在 --t，進場與漂浮動畫都疊在 --t 上，動畫結束後角度不會跑掉 */
+.hv{position:relative;container-type:inline-size}
+.hv::before{content:"";position:absolute;left:8%;right:-6%;top:12%;bottom:-4%;background:radial-gradient(closest-side,rgba(230,255,68,.15),transparent),radial-gradient(40% 40% at 20% 60%,rgba(155,110,234,.16),transparent);pointer-events:none}
+.hv-stage{position:relative;font-size:calc(100cqw / 66);width:62em;height:67em;perspective:150em;animation:hv-fade .9s ease .1s both}
+.hv-scene{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateX(8deg) rotateY(-10deg) rotateZ(-3deg);animation:hv-rise 1.1s cubic-bezier(.2,.8,.2,1) .1s both}
+.hv svg{display:block}
+/* 軌道（黃＋紫兩圈交錯）與地面光；軌道上各有一顆亮點繞行 */
+.hv-orbit{position:absolute;left:-3em;top:13em;width:70em;height:38em;border-radius:50%;border:.22em solid rgba(230,255,68,.85);box-shadow:0 0 1.4em rgba(230,255,68,.6),inset 0 0 1.4em rgba(230,255,68,.4);transform:translateZ(-8em) rotateZ(-14deg)}
+.hv-orbit.o2{left:1em;top:18.5em;width:64em;height:34em;border:.24em solid rgba(155,110,234,.9);box-shadow:0 0 1.6em rgba(155,110,234,.75),inset 0 0 1.3em rgba(155,110,234,.5);transform:translateZ(-10em) rotateZ(-3deg)}
+.hv-spin{--w:70em;--k:.543;position:absolute;left:50%;top:50%;width:var(--w);height:var(--w);margin:calc(var(--w) / -2) 0 0 calc(var(--w) / -2);transform:scaleY(var(--k)) rotate(0deg);animation:hv-spin 9s linear infinite}
+.o2 .hv-spin{--w:64em;--k:.531;animation-duration:13s;animation-direction:reverse}
+.hv-spin i{position:absolute;left:50%;top:0;width:1.4em;height:1.4em;margin:-.7em 0 0 -.7em;border-radius:50%;background:#fff;box-shadow:0 0 .8em .35em #E6FF44,0 0 2.6em 1em rgba(230,255,68,.55)}
+.o2 .hv-spin i{box-shadow:0 0 .8em .35em #B48CF5,0 0 2.6em 1em rgba(155,110,234,.6)}
+.hv-floor{position:absolute;left:8em;top:58em;width:50em;height:7em;border-radius:50%;background:radial-gradient(closest-side,rgba(230,255,68,.45),rgba(155,110,234,.15) 60%,transparent);transform:translateZ(-4em)}
+/* 卡片共用 */
+.hv-card{position:absolute;border-radius:2.4em;transform:var(--t)}
+/* Google 排名卡（後方左上） */
+.hv-g{--t:translateZ(-5em) rotateZ(-5deg);left:1.5em;top:6em;width:30em;height:28em;padding:2.6em 2.4em;background:linear-gradient(160deg,rgba(255,255,255,.96),rgba(214,218,222,.9));box-shadow:0 2em 4em -1.5em rgba(0,0,0,.7);animation:hv-in .8s cubic-bezier(.2,.8,.2,1) .35s both}
+.hv-glogo{font-family:"Montserrat",sans-serif;font-weight:700;font-size:3em;letter-spacing:-.02em;line-height:1}
+.hv-gbar{display:flex;align-items:center;justify-content:space-between;margin-top:1.4em;height:3.8em;padding:0 1.4em;border-radius:999em;background:#fff;box-shadow:0 .2em .8em rgba(0,0,0,.12)}
+.hv-gbar i{display:block;width:12em;height:.8em;border-radius:1em;background:#C9CED6}
+.hv-gbar svg{width:1.8em;height:1.8em;fill:none;stroke:#555;stroke-width:2.6}
+.hv-gres{display:grid;gap:1.6em;margin-top:2em}
+.hv-gres>div{display:grid;grid-template-columns:2.4em 1fr;column-gap:1.2em;row-gap:.6em;align-items:center}
+.hv-gres b{grid-row:span 2;display:grid;place-items:center;width:2.4em;height:2.4em;border-radius:.6em;background:#D8DCE2;color:#66707E;font-family:"Montserrat",sans-serif;font-size:1em}
+.hv-gres .top b{background:#2F6BD0;color:#fff}
+.hv-gres i{display:block;height:.9em;border-radius:1em;background:#BFC5CE}
+.hv-gres .top i{transform-origin:left;animation:hv-grow .8s cubic-bezier(.2,.8,.2,1) 1.3s both}
+.hv-gres .top i:first-of-type{background:#3B7BE8;width:75%}
+.hv-gres .top i:last-of-type{background:#5CB85C;width:95%;animation-delay:1.45s}
+.hv-gres div:not(.top) i:last-of-type{width:60%}
+/* AI 平台卡（後方右上）：三個圖示輪流亮起 */
+.hv-ais{--t:translateZ(-3em) rotateZ(3deg);left:40em;top:1em;width:20em;height:15em;padding:1.8em;background:linear-gradient(160deg,rgba(70,70,70,.8),rgba(30,30,30,.85));border:.12em solid rgba(255,255,255,.16);box-shadow:0 0 2.4em rgba(230,255,68,.18);animation:hv-in .8s cubic-bezier(.2,.8,.2,1) .5s both}
+.hv-ais div{display:flex;gap:1em}
+.hv-ais span{display:grid;place-items:center;width:5em;height:5em;border-radius:1.4em;background:linear-gradient(160deg,#fff,#E9ECEF);box-shadow:0 .5em 1em rgba(0,0,0,.35);animation:hv-tile 4.5s ease-in-out 4s infinite}
+.hv-ais span:nth-child(2){animation-delay:5.5s}.hv-ais span:nth-child(3){animation-delay:7s}
+.hv-ais svg,.hv-ais img{width:3.1em;height:3.1em}
+/* AI 搜尋結果卡（主卡）：搜尋字逐字打出 → 三個推薦依序滑入 → 第 1 名皇冠落下、螢光框持續呼吸 */
+.hv-main{--t:translateZ(2em);left:15em;top:16.5em;width:45em;padding:2.6em 2.6em 3em;background:linear-gradient(170deg,#FFFFFF,#ECEFED);border-radius:2.8em;box-shadow:0 0 0 .25em rgba(230,255,68,.3),0 0 4em rgba(230,255,68,.28),0 3em 6em -2em rgba(0,0,0,.75);animation:hv-in .8s cubic-bezier(.2,.8,.2,1) .6s both}
+.hv-head{display:flex;align-items:center;justify-content:space-between;gap:1.4em}
+.hv-who{display:flex;align-items:center;gap:.9em}
+.hv-who img{width:4.2em;height:4.2em}
+.hv-who b{font-family:var(--head);font-size:2.5em;color:#111;letter-spacing:.02em;white-space:nowrap}
+.hv-q{display:flex;align-items:center;gap:.6em;background:#EEF0FB;border-radius:999em;padding:.9em 1.4em;box-shadow:inset 0 0 0 .12em rgba(59,74,154,.14),0 .4em 1em rgba(59,74,154,.12)}
+.hv-q svg{width:1.9em;height:1.9em;fill:none;stroke:#3B4A9A;stroke-width:2.6;stroke-linecap:round}
+.hv-q span{font-size:1.45em;font-weight:700;color:#2F3A7A;white-space:nowrap;letter-spacing:.02em;animation:hv-type .9s steps(12) 1.2s both}
+.hv-say{font-size:1.6em;color:#444;margin:1.1em 0 .9em .2em;letter-spacing:.04em;animation:hv-fade .5s ease 2.05s both}
+.hv-rows{display:grid;gap:1.2em}
+.hv-row{position:relative;display:flex;align-items:center;gap:1.4em;background:#F0F1F0;border-radius:1.6em;padding:.8em 1.1em .8em 1.5em;animation:hv-row-in .55s cubic-bezier(.2,.8,.2,1) 2.45s both}
+.hv-row:nth-child(3){animation-delay:2.65s}
+.hv-n{flex:none;display:grid;place-items:center;width:3.2em;height:3.2em;border-radius:.9em;background:#3A3A3A;color:#fff;font-family:"Montserrat",sans-serif;font-weight:700;font-size:1.3em}
+.hv-t{flex:1;min-width:0;font-size:1.55em;color:#333;letter-spacing:.03em}
+.hv-th{flex:none;width:7.6em;height:4.6em;border-radius:.9em;overflow:hidden;box-shadow:0 .3em .8em rgba(0,0,0,.15)}
+.hv-th svg{width:100%;height:100%}
+.hv-row.you{background:#fff;padding:1.7em 1.4em 1.7em 1.8em;box-shadow:0 0 0 .32em var(--lime),0 0 2.8em .5em rgba(230,255,68,.6);animation:hv-row-in .55s cubic-bezier(.2,.8,.2,1) 2.25s both,hv-glow 2.4s ease-in-out 3.1s infinite}
+.hv-row.you .hv-n{width:3.4em;height:3.4em;font-size:1.6em;background:#1C1C1C}
+.hv-row.you .hv-t b{display:block;font-family:var(--head);font-size:1.65em;color:#111;line-height:1.3}
+.hv-row.you .hv-t small{display:block;font-size:.88em;color:#555;margin-top:.3em;white-space:nowrap}
+.hv-row.you .hv-th{width:10.5em;height:6.8em}
+.hv-crown{position:absolute;left:.6em;top:-1.8em;width:4.6em;height:3.6em;filter:drop-shadow(0 .3em .4em rgba(0,0,0,.25));animation:hv-crown .7s cubic-bezier(.3,1.6,.5,1) 2.6s both}
+.hv-burst{position:absolute;right:-1.2em;top:-4.6em;width:5em;height:5em;transform-origin:0 100%;animation:hv-burst 3s ease 2.9s infinite both}
+/* 浮動標籤：依序彈出，之後各自緩慢上下漂浮（節奏不同步） */
+.hv-pill{position:absolute;display:inline-flex;align-items:center;gap:.9em;padding:1.1em 2.2em 1.1em 1.8em;border-radius:999em;background:linear-gradient(160deg,rgba(46,46,46,.95),rgba(18,18,18,.95));border:.16em solid rgba(230,255,68,.85);box-shadow:0 0 1.8em rgba(230,255,68,.35),0 1.2em 2em -1em rgba(0,0,0,.7);white-space:nowrap;transform:var(--t);animation:hv-pop .55s cubic-bezier(.3,1.5,.5,1) var(--d) both,hv-bob var(--b) ease-in-out calc(var(--d) + .6s) infinite}
+.hv-pill b{font-family:var(--head);font-size:1.8em;color:#fff;letter-spacing:.04em}
+.hv-pill svg{width:2.4em;height:2.4em}
+.hv-p1{--t:translateZ(4em) rotateZ(-6deg);--d:3s;--b:4.2s;left:10.5em;top:2em}
+.hv-p2{--t:translateZ(5em) rotateZ(3deg);--d:3.15s;--b:5s;left:32.5em;top:10em}
+.hv-p3{--t:translateZ(7em) rotateZ(-4deg);--d:2.8s;--b:4.6s;left:51.5em;top:39.5em}
+.hv-p4{--t:translateZ(7em) rotateZ(5deg);--d:3.3s;--b:5.4s;left:2.5em;top:45em}
+/* 數據卡（右下）：數字從 0 往上跳、長條由低到高長出、箭頭畫出來 */
+.hv-stat{--t:translateZ(6em);left:39em;top:57em;width:23em;display:flex;align-items:flex-end;justify-content:space-between;gap:1em;padding:1.8em 2em 1.8em 2.2em;background:linear-gradient(150deg,rgba(58,58,58,.94),rgba(22,22,22,.95));border:.12em solid rgba(255,255,255,.16);border-radius:2.2em;box-shadow:0 0 2.6em rgba(230,255,68,.28),0 2em 3em -1em rgba(0,0,0,.7);animation:hv-in .7s cubic-bezier(.2,.8,.2,1) 3.3s both}
+.hv-stat-l{display:block;font-family:var(--head);font-weight:700;font-size:1.6em;color:#fff;letter-spacing:.04em;line-height:1.3}
+.hv-stat strong{display:block;font-family:"Montserrat",sans-serif;font-style:italic;font-weight:700;font-size:3.6em;color:var(--lime);line-height:1.1;letter-spacing:-.01em;white-space:nowrap}
+.hv-num{display:inline-block;min-width:1.9em;text-align:right;font-variant-numeric:tabular-nums}
+.hv-stat svg{flex:none;width:8.5em;height:7em}
+.hv-b{transform-box:fill-box;transform-origin:50% 100%;animation:hv-bar .6s cubic-bezier(.2,.8,.2,1) 3.6s both}
+.hv-b:nth-of-type(2){animation-delay:3.72s}.hv-b:nth-of-type(3){animation-delay:3.84s}.hv-b:nth-of-type(4){animation-delay:3.96s}
+.hv-arrow{stroke-dasharray:1;animation:hv-draw .7s ease 4.1s both}
+.hv-arrow-h{animation:hv-fade .3s ease 4.7s both}
+@keyframes hv-fade{from{opacity:0}}
+@keyframes hv-rise{from{transform:rotateX(8deg) rotateY(-10deg) rotateZ(-3deg) translateY(3em)}}
+@keyframes hv-in{from{opacity:0;transform:var(--t) translateY(2.5em)}}
+@keyframes hv-pop{from{opacity:0;transform:var(--t) scale(.6)}}
+@keyframes hv-bob{50%{transform:var(--t) translateY(-.9em)}}
+@keyframes hv-spin{to{transform:scaleY(var(--k)) rotate(360deg)}}
+@keyframes hv-grow{from{transform:scaleX(0)}}
+@keyframes hv-tile{0%,22%,100%{transform:none}11%{transform:translateY(-.5em) scale(1.08);box-shadow:0 0 0 .2em var(--lime),0 0 1.8em rgba(230,255,68,.7)}}
+@keyframes hv-type{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes hv-row-in{from{opacity:0;transform:translateX(2.5em)}}
+@keyframes hv-glow{50%{box-shadow:0 0 0 .32em var(--lime),0 0 4em 1.1em rgba(230,255,68,.85)}}
+@keyframes hv-crown{from{opacity:0;transform:translateY(-2.5em) rotate(-25deg) scale(.6)}}
+@keyframes hv-burst{0%,70%,100%{opacity:0;transform:scale(.6)}15%,45%{opacity:1;transform:scale(1)}}
+@keyframes hv-bar{from{transform:scaleY(0)}}
+@keyframes hv-draw{from{stroke-dashoffset:1}}
+@keyframes up{to{opacity:1;transform:none}}
+
+/* 網站行銷 4 階段：桌機＝4 張等高卡片（卡內階段動態圖示）＋底部階段目標；手機＝垂直時間軸 */
+.st-cta{margin-top:1rem}
+.st-cta p{font-family:var(--head);font-weight:700;font-size:clamp(1.05rem,1.8vw,1.3rem);color:var(--text-2)}
+.st-cta em{font-style:normal;color:var(--char);background:linear-gradient(transparent 55%,var(--lime) 55%);padding:0 .15em}
+.stages{display:grid;grid-template-columns:repeat(4,1fr);gap:1.1rem;position:relative}
+.stages.rv{opacity:1;transform:none}
+.stage{--c:#8A8A8A;position:relative;display:flex;flex-direction:column;opacity:0;transform:translateY(18px);transition:opacity .6s ease, transform .6s cubic-bezier(.2,.7,.2,1)}
+.stage[data-s="2"]{--c:#2F6BD0;transition-delay:.1s}
+.stage[data-s="3"]{--c:var(--violet);transition-delay:.2s}
+.stage[data-s="4"]{--c:var(--lime);transition-delay:.3s}
+.stages.on .stage{opacity:1;transform:none}
+.st-card{flex:1;display:flex;flex-direction:column;background:var(--white);border-radius:20px;padding:1.4rem 1.3rem 1.3rem;position:relative;
+  box-shadow:0 1px 0 rgba(0,0,0,.04),0 18px 40px -28px rgba(0,0,0,.28);transition:transform .25s, box-shadow .25s}
+.stage:hover .st-card{transform:translateY(-6px);box-shadow:0 28px 50px -28px rgba(0,0,0,.38)}
+.st-top{display:flex;align-items:center;gap:.6rem;margin-bottom:.9rem}
+.st-no{font-size:2.3rem;font-weight:700;line-height:1;color:var(--c);letter-spacing:-.02em}
+.st-goal{display:none;font-size:.75rem;font-weight:700;padding:.15rem .6rem;border-radius:999px;background:#F1F1F1;color:var(--text-2);white-space:nowrap}
+.st-card h3{font-size:1.15rem;line-height:1.5;margin-bottom:.45rem}
+.st-pain{font-size:.9rem;color:var(--text-2);line-height:1.7;margin-bottom:1.1rem}
+.st-fix{margin-top:auto;padding-top:.9rem;border-top:1px dashed #D5D5D5;display:flex;gap:.6rem;align-items:flex-start}
+.st-fix .lbl{flex:none;font-size:.72rem;font-weight:700;color:#fff;background:var(--char);border-radius:6px;padding:.1rem .45rem;margin-top:.22em}
+.st-fix p{font-size:.95rem;font-weight:700;line-height:1.6}
+.st-fix .up{color:var(--lime);margin-left:.15em}
+/* 階段圖示：每階段一個線條 icon＋循環小動畫（區塊進入畫面後才開始） */
+.st-ic{margin-left:auto;flex:none;width:48px;height:48px;border-radius:14px;display:grid;place-items:center;color:var(--c);background:color-mix(in srgb,var(--c) 14%,#fff)}
+.st-ic svg{width:28px;height:28px;overflow:visible;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.st-ic .fill{fill:currentColor;stroke:none}
+.st-ic .dr{stroke-dasharray:1}
+.st-ic .pop,.st-ic .mag,.st-ic .head,.st-ic .sp1,.st-ic .sp2{transform-box:fill-box;transform-origin:center}
+.stage[data-s="1"] .st-ic{color:#6F6F6F;background:#EFEFEF}
+.stage[data-s="4"] .st-ic{background:rgba(255,255,255,.08)}
+/* 01 建站：視窗內容一塊塊長出來 */
+.stages.on .ic1 .b1{animation:ic-pop 3.6s .4s infinite both}
+.stages.on .ic1 .b2{animation:ic-draw 3.6s .75s infinite both}
+.stages.on .ic1 .b3{animation:ic-draw 3.6s 1s infinite both}
+/* 02 健檢：放大鏡左右掃描、心跳線跑動 */
+.stages.on .ic2 .mag{transform-origin:42% 42%;animation:ic-sway 2.6s .5s infinite ease-in-out both}
+.stages.on .ic2 .pulse{animation:ic-scan 2.6s .5s infinite both}
+/* 03 衝流量：趨勢線往上畫＋箭頭彈出 */
+.stages.on .ic3 .trend{animation:ic-trend 3.2s .5s infinite both}
+.stages.on .ic3 .head{animation:ic-head 3.2s .5s infinite both}
+/* 04 AI 提及：星芒閃爍＋外圈光暈 */
+.stages.on .ic4 .sp1{animation:ic-twinkle 2.4s .5s infinite ease-in-out both}
+.stages.on .ic4 .sp2{animation:ic-twinkle 2.4s 1.3s infinite ease-in-out both}
+.stages.on .stage[data-s="4"] .st-ic{animation:ic-glow 2.4s .5s infinite}
+@keyframes ic-pop{0%{transform:scale(0)}15%,80%{transform:scale(1)}92%,100%{transform:scale(0)}}
+@keyframes ic-draw{0%{stroke-dashoffset:1}20%,80%{stroke-dashoffset:0}94%,100%{stroke-dashoffset:-1}}
+@keyframes ic-scan{0%{stroke-dashoffset:1}45%,55%{stroke-dashoffset:0}100%{stroke-dashoffset:-1}}
+@keyframes ic-sway{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(7deg)}}
+@keyframes ic-trend{0%{stroke-dashoffset:1;opacity:1}35%,82%{stroke-dashoffset:0;opacity:1}95%,100%{stroke-dashoffset:0;opacity:0}}
+@keyframes ic-head{0%,30%{opacity:0;transform:translate(-3px,3px)}42%,82%{opacity:1;transform:none}95%,100%{opacity:0;transform:none}}
+@keyframes ic-twinkle{0%,100%{transform:scale(1) rotate(0)}50%{transform:scale(.55) rotate(45deg);opacity:.55}}
+@keyframes ic-glow{0%{box-shadow:0 0 0 0 rgba(230,255,68,.45)}70%,100%{box-shadow:0 0 0 10px rgba(230,255,68,0)}}
+/* 第 4 階段強調 */
+.stage[data-s="4"] .st-card{background:var(--char);color:#fff;outline:2px solid var(--lime);outline-offset:-2px;box-shadow:0 26px 50px -22px rgba(230,255,68,.6)}
+.stage[data-s="4"] .st-pain{color:#CFCFCF}
+.stage[data-s="4"] .st-fix{border-color:#454545}
+.stage[data-s="4"] .st-fix .lbl{background:var(--lime);color:var(--char)}
+.stage[data-s="4"] .st-goal{background:var(--lime);color:var(--char)}
+.st-badge{position:absolute;top:-13px;right:16px;background:var(--lime);color:var(--char);font-size:.75rem;font-weight:700;padding:.2rem .75rem;border-radius:999px;box-shadow:0 8px 18px -8px rgba(230,255,68,.9)}
+/* 底部軸線：階段目標 */
+.axis{display:grid;grid-template-columns:repeat(4,1fr);gap:1.1rem;margin-top:1.4rem}
+.axis span{position:relative;text-align:center;font-weight:700;padding-top:.9rem}
+.axis span::before{content:"";position:absolute;left:10%;right:10%;top:0;height:8px;border:2px solid #C4C4C4;border-top:0;border-radius:0 0 8px 8px}
+.axis .a1{grid-column:1/3}
+.axis b{background:linear-gradient(transparent 55%,var(--lime) 55%);padding:0 .25em}
+
+/* SEO＋GEO：滿版深色底（三色光暈＋點陣），底部漸層接到下一區（報告區 #1C1C1C）；文氏圖動態：左右兩圈靠攏 → 交集亮起 → 光點沿圓環繞行 */
+.dual-sec{color:#fff;background:
+    radial-gradient(560px 440px at calc(50% - 440px) 56%,rgba(155,110,234,.26),transparent 70%),
+    radial-gradient(560px 440px at calc(50% + 440px) 56%,rgba(248,237,184,.13),transparent 70%),
+    radial-gradient(440px 400px at 50% 54%,rgba(230,255,68,.12),transparent 70%),
+    linear-gradient(180deg,#000 0%,#050505 50%,var(--char) 100%)}
+.dual-sec::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:radial-gradient(rgba(255,255,255,.08) 1px,transparent 1.4px);background-size:24px 24px;
+  -webkit-mask-image:radial-gradient(55% 50% at 50% 30%,#000 15%,transparent 75%);mask-image:radial-gradient(55% 50% at 50% 30%,#000 15%,transparent 75%)}
+.dual{position:relative}
+.dual .head{text-align:center;margin-bottom:1.6rem}
+.eyebrow-en{font-family:var(--eyebrow);font-weight:500;font-size:16px;letter-spacing:.04em;color:var(--lime);margin-bottom:.5rem}
+.venn{display:grid;grid-template-columns:1fr 1.8fr 1fr;align-items:center;gap:1rem}
+/* 左右說明卡：SEO＝紫、GEO＝暖黃，連接線指向對應的圓 */
+.venn .side{--ac:#BFA4F5;--ac-bg:rgba(155,110,234,.18);position:relative;text-align:left;padding:1.5rem 1.25rem 1.4rem;border-radius:22px;
+  background:linear-gradient(160deg,rgba(255,255,255,.09),rgba(255,255,255,.025) 60%);border:1px solid rgba(255,255,255,.12);
+  box-shadow:0 20px 40px -24px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.08)}
+.venn .side.geo{--ac:#F4E5A6;--ac-bg:rgba(248,237,184,.12)}
+.side-hd{display:flex;align-items:center;gap:.85rem;margin-bottom:1rem}
+.side-ic{flex:none;width:46px;height:46px;border-radius:14px;display:grid;place-items:center;color:var(--ac);background:var(--ac-bg);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--ac) 35%,transparent)}
+.side-ic svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.venn .side h3{font-size:1.6rem;line-height:1.15;letter-spacing:.06em}
+.venn .side h3 small{display:block;font-size:.95rem;color:var(--ac);letter-spacing:.06em;margin-top:.3rem}
+.venn .side p{color:#C9C9C9;font-size:.93rem;line-height:1.7;margin:0 0 1rem;padding-top:.95rem;border-top:1px solid rgba(255,255,255,.1)}
+.pills{display:flex;flex-wrap:wrap;gap:.4rem}
+.pills span{font-weight:700;font-size:.82rem;padding:.26rem .66rem;border-radius:999px;color:var(--ac);background:var(--ac-bg);border:1px solid color-mix(in srgb,var(--ac) 40%,transparent)}
+.venn .side::after{content:"";position:absolute;top:50%;width:52px;height:8px;margin-top:-4px;pointer-events:none}
+.venn .side.seo::after{left:100%;background:radial-gradient(circle,var(--ac) 0 2.5px,transparent 3px) right center/8px 8px no-repeat,linear-gradient(90deg,transparent,color-mix(in srgb,var(--ac) 80%,transparent)) left center/calc(100% - 4px) 1px no-repeat}
+.venn .side.geo::after{right:100%;background:radial-gradient(circle,var(--ac) 0 2.5px,transparent 3px) left center/8px 8px no-repeat,linear-gradient(270deg,transparent,color-mix(in srgb,var(--ac) 80%,transparent)) right center/calc(100% - 4px) 1px no-repeat}
+/* 文氏圖：同一張去背圖疊 3 層（左月牙、右月牙、完整）做進場；光暈與光點另外疊上去；圖片載入完成（.ready）才開始播放
+   左／右層用「挖掉另一個圓」的圓形遮罩，滑入時兩個圓都是完整外框，不會出現直線切口；交集處等兩圓靠攏再亮起 */
+.circles{position:relative;aspect-ratio:1300/813}
+.circles img{position:absolute;inset:0;width:100%;height:100%;display:block}
+.circles .half,.circles .full,.halo,.orbit{opacity:0}
+.circles .half.l{-webkit-mask-image:radial-gradient(27.4% 43.8% at 66.75% 49.9%,transparent 99%,#000 102.5%);mask-image:radial-gradient(27.4% 43.8% at 66.75% 49.9%,transparent 99%,#000 102.5%)}
+.circles .half.r{-webkit-mask-image:radial-gradient(27.4% 43.8% at 33.25% 49.9%,transparent 99%,#000 102.5%);mask-image:radial-gradient(27.4% 43.8% at 33.25% 49.9%,transparent 99%,#000 102.5%)}
+.halo{position:absolute;left:50%;top:50.5%;width:26%;height:78%;border-radius:50%;transform:translate(-50%,-50%);background:radial-gradient(closest-side,rgba(230,255,68,.9),rgba(230,255,68,0));filter:blur(16px)}
+.orbit{position:absolute;top:49.9%;width:51.5%;aspect-ratio:1;transform:translate(-50%,-50%);pointer-events:none}
+.orbit.o1{left:33.1%}.orbit.o2{left:66.9%}
+.orbit i{position:absolute;left:50%;top:0;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;background:#fff;box-shadow:0 0 8px 2px #fff,0 0 24px 8px rgba(230,255,68,.6)}
+.dual.on .ready .half.l{animation:v-in-l 1s cubic-bezier(.2,.8,.2,1) .1s both, v-out .5s ease 1.35s forwards}
+.dual.on .ready .half.r{animation:v-in-r 1s cubic-bezier(.2,.8,.2,1) .1s both, v-out .5s ease 1.35s forwards}
+.dual.on .ready .full{animation:v-full .45s ease .85s both}
+.dual.on .ready .halo{animation:v-flash 1s ease-out .9s both, v-pulse 3.2s ease-in-out 1.9s infinite}
+.dual.on .ready .orbit{animation:v-fade .8s ease 1.4s both, v-orb 10s linear 1.4s infinite}
+.dual.on .ready .orbit.o2{animation-direction:normal,reverse}
+@keyframes v-in-l{0%{opacity:0;transform:translateX(-16%)}30%{opacity:1}100%{opacity:1;transform:none}}
+@keyframes v-in-r{0%{opacity:0;transform:translateX(16%)}30%{opacity:1}100%{opacity:1;transform:none}}
+@keyframes v-out{from{opacity:1}to{opacity:0}}
+@keyframes v-full{from{opacity:0}to{opacity:1}}
+@keyframes v-flash{0%{opacity:0;transform:translate(-50%,-50%) scale(.5)}45%{opacity:1;transform:translate(-50%,-50%) scale(1.2)}100%{opacity:.5;transform:translate(-50%,-50%) scale(1)}}
+@keyframes v-pulse{0%,100%{opacity:.5;transform:translate(-50%,-50%) scale(1)}50%{opacity:.9;transform:translate(-50%,-50%) scale(1.08)}}
+@keyframes v-fade{to{opacity:1}}
+@keyframes v-orb{from{transform:translate(-50%,-50%) rotate(0)}to{transform:translate(-50%,-50%) rotate(360deg)}}
+.dual-end{text-align:center;margin-top:2.4rem;font-family:var(--head);font-weight:700;font-size:clamp(1.15rem,2.1vw,1.5rem);letter-spacing:.04em}
+.dual-end em{font-style:normal;color:var(--lime)}
+/* 平板／手機：文氏圖在上，SEO／GEO 兩張卡並排在對應的圓下方，只留主標＋副標＋小標籤 */
+@media (max-width:980px){
+  .dual-sec{background:
+    radial-gradient(280px 260px at 22% 74%,rgba(155,110,234,.28),transparent 70%),
+    radial-gradient(280px 260px at 78% 74%,rgba(248,237,184,.14),transparent 70%),
+    radial-gradient(320px 280px at 50% 42%,rgba(230,255,68,.12),transparent 70%),
+    linear-gradient(180deg,#000 0%,#050505 50%,var(--char) 100%)}
+  .venn{grid-template-columns:1fr 1fr;gap:1.4rem .7rem;align-items:stretch}
+  .circles{grid-column:1/-1;order:-1;width:100%;max-width:560px;margin-inline:auto}
+  .venn .side{text-align:center;padding:1.3rem .8rem 1.15rem}
+  .side-hd{flex-direction:column;gap:.6rem;margin-bottom:.8rem}
+  .pills{justify-content:center}
+  .venn .side.seo::after,.venn .side.geo::after{left:50%;right:auto;top:-1.4rem;width:8px;height:1.4rem;margin:0 0 0 -4px;
+    background:radial-gradient(circle,var(--ac) 0 2.5px,transparent 3px) center top/8px 8px no-repeat,linear-gradient(color-mix(in srgb,var(--ac) 80%,transparent),transparent) center bottom/1px calc(100% - 4px) no-repeat}
+}
+@media (max-width:600px){
+  .orbit i{width:7px;height:7px;margin:-3.5px 0 0 -3.5px}
+  .venn .side p{display:none}
+  .venn .side h3{font-size:1.5rem}
+  .venn .side h3 small{font-size:.86rem;letter-spacing:.03em}
+  .side-ic{width:38px;height:38px;border-radius:12px}
+  .side-ic svg{width:20px;height:20px}
+  .pills{gap:.3rem}
+  .pills span{font-size:.7rem;padding:.14rem .5rem}
+}
+
+/* report：上緣維持 #1C1C1C 與上一區無縫銜接；報告卡後方萊姆光暈＋細格線（像報告紙），左下一點紫光，取代原本的玻璃球 */
+.report{background:
+  radial-gradient(560px 440px at calc(50% + 250px) 56%,rgba(230,255,68,.11),transparent 70%),
+  radial-gradient(520px 400px at calc(50% - 520px) 92%,rgba(155,110,234,.16),transparent 70%),
+  var(--char)}
+.report::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:44px 44px;
+  -webkit-mask-image:radial-gradient(46% 58% at 68% 55%,#000 10%,transparent 75%);mask-image:radial-gradient(46% 58% at 68% 55%,#000 10%,transparent 75%)}
+@media (max-width:980px){
+  .report{background:radial-gradient(380px 340px at 50% 72%,rgba(230,255,68,.11),transparent 70%),radial-gradient(320px 280px at 0% 30%,rgba(155,110,234,.14),transparent 70%),var(--char)}
+  .report::before{-webkit-mask-image:radial-gradient(90% 40% at 50% 72%,#000 10%,transparent 75%);mask-image:radial-gradient(90% 40% at 50% 72%,#000 10%,transparent 75%)}
+}
+.report .wrap{display:grid;grid-template-columns:.85fr 1.15fr;gap:clamp(2rem,5vw,4rem);align-items:start}
+.report .lead{color:#CFCFCF;margin:1rem 0 1.8rem}
+.sheet{background:var(--white);color:var(--text);border-radius:18px;overflow:hidden;box-shadow:0 30px 60px -25px rgba(0,0,0,.7)}
+.sheet .sh{background:#3A3A3A;color:#fff;display:flex;align-items:center;gap:.7rem;padding:.9rem 1.2rem;font-weight:700}
+.sheet .sh span{margin-left:auto;font-size:.85rem;color:#BDBDBD;font-weight:500}
+.sheet .row{display:grid;grid-template-columns:auto 1fr auto;gap:1rem;align-items:center;padding:1rem 1.2rem;border-top:1px solid #E5E5E5}
+.sheet .row .n{font-family:var(--head);font-weight:700;color:var(--violet);font-size:1.2rem}
+.sheet .row h3{font-family:var(--sans);font-size:1.02rem}
+.sheet .row p{font-size:.86rem;color:var(--text-2);line-height:1.6}
+.st{font-size:.78rem;font-weight:700;padding:.2rem .65rem;border-radius:6px;white-space:nowrap}
+.ok{background:#DDF5E3;color:#1D7A3A}.ng{background:#FCE1E1;color:#C2372F}.warn{background:#FFF1C9;color:#9A7406}
+.tabs{display:flex;flex-wrap:wrap;gap:.5rem;padding:1rem 1.2rem;background:#F6F6F6;border-top:1px solid #E5E5E5}
+.tabs span{font-size:.8rem;background:#fff;border:1px solid #DDD;border-radius:8px;padding:.25rem .65rem}
+
+/* plans */
+.plan-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
+.plan{background:var(--white);border-radius:22px;padding:2rem 1.7rem;display:flex;flex-direction:column;position:relative;transition:transform .2s, box-shadow .2s}
+.plan:hover{transform:translateY(-6px);box-shadow:0 26px 50px -28px rgba(0,0,0,.35)}
+.plan .ico{width:58px;height:58px;border-radius:50%;background:var(--lime);display:grid;place-items:center;margin-bottom:1rem}
+.plan h3{font-size:1.35rem;margin-bottom:.8rem}
+.plan ul{list-style:none;display:grid;gap:.5rem;color:var(--text-2);font-size:.93rem;margin-bottom:1.6rem;flex:1;border-top:2px dotted #CFCFCF;padding-top:1rem}
+.plan li{padding-left:1.2em;position:relative}
+.plan li::before{content:"";position:absolute;left:0;top:.68em;width:7px;height:7px;border-radius:50%;background:var(--violet)}
+.plan.hot{background:var(--char);color:#fff;outline:3px solid var(--lime);outline-offset:-3px}
+.plan.hot ul{color:#CFCFCF;border-color:#444}
+.plan.hot li::before{background:var(--lime)}
+.plan .rib{position:absolute;top:-14px;left:1.7rem;background:var(--violet);color:#fff;font-size:.8rem;font-weight:700;padding:.25rem .85rem;border-radius:999px}
+.plan .go{font-weight:700;text-decoration:none;align-self:flex-start;border-bottom:2px solid var(--violet);padding-bottom:2px}
+.plan.hot .go{border-color:var(--lime)}
+
+/* guarantee */
+.g-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem}
+.g{border-radius:22px;padding:2rem;background:var(--char-2);position:relative}
+.g.y{outline:3px solid #F5D94A;outline-offset:-3px}
+.g.gr{outline:3px solid #3F8F5C;outline-offset:-3px}
+.g .tag{display:inline-block;font-family:var(--head);font-weight:700;color:var(--char);padding:.3rem 1rem;border-radius:10px;font-size:.95rem}
+.g.y .tag{background:linear-gradient(90deg,#FFF3A8,#F7B5F0)}
+.g.gr .tag{background:linear-gradient(90deg,#C9F5D6,#A9C4FF)}
+.g h3{font-size:clamp(1.3rem,2.4vw,1.7rem);margin:1rem 0 1.2rem}
+.g ul{list-style:none;background:#F6F6F6;color:var(--text);border-radius:14px;padding:1rem 1.2rem;display:grid;gap:.4rem;font-size:.95rem}
+.g li{position:relative;padding-left:1.1em}
+.g li::before{content:"";position:absolute;left:0;top:.72em;width:6px;height:6px;border-radius:50%;background:var(--char)}
+.g-note{text-align:center;font-family:var(--head);font-weight:700;font-size:clamp(1.2rem,2.2vw,1.55rem);margin-top:2.6rem;line-height:1.7}
+/* 結尾 3D 盾牌圖示：立體漸層＋定時掃過的反光＋輪流閃爍的星芒＋輕微浮動 */
+.ic3d{display:inline-block;width:2.2em;height:2.2em;vertical-align:-.72em;margin-left:.3em;filter:drop-shadow(0 6px 14px rgba(230,255,68,.35))}
+.ic3d svg{display:block;width:100%;height:100%;overflow:visible;animation:g3d-bob 3.2s ease-in-out infinite}
+.ic3d .glint{animation:g3d-glint 3.6s ease-in-out infinite}
+.ic3d .spk{transform-box:fill-box;transform-origin:center;animation:g3d-twk 2.4s ease-in-out infinite}
+.ic3d .s2{animation-delay:.8s}.ic3d .s3{animation-delay:1.6s}
+@keyframes g3d-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@keyframes g3d-glint{0%,55%{transform:translateX(0)}85%,100%{transform:translateX(100px)}}
+@keyframes g3d-twk{0%,100%{opacity:0;transform:scale(.3)}50%{opacity:1;transform:scale(1) rotate(45deg)}}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.4rem}
+.steps div{border:1px solid #3C3C3C;border-radius:16px;padding:1.2rem 1.3rem}
+.steps b{display:inline-block;background:var(--lime);color:var(--char);font-size:.78rem;padding:.1rem .6rem;border-radius:6px;margin-bottom:.5rem}
+.steps h4{font-size:1.1rem}
+
+/* 成功案例標題：獎章圖示（中間是犬哥頭像）＋英文眉標＋大標 */
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.cx-head{display:flex;align-items:center;gap:clamp(1rem,2.5vw,1.8rem)}
+.medal{flex:0 0 auto;width:clamp(86px,9.5vw,124px);aspect-ratio:120/132;filter:drop-shadow(0 14px 20px rgba(110,128,0,.3))}
+.medal svg{display:block;width:100%;height:100%;overflow:visible;animation:g3d-bob 3.2s ease-in-out infinite}
+.medal .glint{animation:md-glint 4s ease-in-out infinite}
+.medal .spk{transform-box:fill-box;transform-origin:center;animation:g3d-twk 2.4s ease-in-out infinite}
+.medal .s2{animation-delay:.8s}.medal .s3{animation-delay:1.6s}
+@keyframes md-glint{0%,55%{transform:translateX(-10px)}85%,100%{transform:translateX(150px)}}
+.cx-kicker{font-family:var(--eyebrow);font-weight:700;font-size:.92rem;letter-spacing:.2em;text-transform:uppercase;color:var(--violet)}
+.cx-head h2{font-size:clamp(2.3rem,4.8vw,3.5rem);line-height:1.15;margin-top:.1rem}
+.cx-head .sub{margin-top:.5rem}
+
+/* 成功案例：一次只展開一個品牌（深色底＋成果截圖），其他收合成白色「品牌＋成效數字」；按左右箭頭或點品牌切換 */
+.cx{display:flex;gap:14px;height:480px;container-type:inline-size}
+.cx-item{position:relative;flex:1 1 0;min-width:0;background:var(--white);border-radius:22px;overflow:hidden;transition:flex-grow .7s cubic-bezier(.2,.8,.2,1),box-shadow .3s,background .45s}
+.cx-item.on{flex-grow:5.2;background:var(--char);box-shadow:0 34px 60px -30px rgba(0,0,0,.6)}
+.cx-item:not(.on):hover{box-shadow:0 18px 40px -22px rgba(0,0,0,.3)}
+/* 收合狀態：品牌名稱＋主要成效數字 */
+.cx-mini{position:absolute;inset:0;display:flex;flex-direction:column;align-items:flex-start;gap:.3rem;padding:1.4rem 1.2rem;border:0;background:none;text-align:left;font-family:var(--sans);color:var(--char);cursor:pointer;transition:opacity .25s,visibility .25s,background .25s}
+.cx-mini:hover{background:#FAFAF7}
+.cx-mini:focus-visible{outline:3px solid var(--violet);outline-offset:-3px;border-radius:22px}
+.cx-item.on .cx-mini{opacity:0;visibility:hidden}
+.cx-no{font-family:var(--eyebrow);font-weight:700;font-size:.82rem;letter-spacing:.1em;color:var(--mute)}
+.cx-tag{font-size:.74rem;font-weight:700;letter-spacing:.06em;color:var(--plum);background:var(--lavender);padding:.05rem .55rem;border-radius:6px;margin-top:.5rem}
+.cx-name{font-family:var(--head);font-weight:700;font-size:1.12rem;line-height:1.35;margin-top:.2rem}
+.cx-stat{margin-top:auto;border-top:2px solid var(--char);padding-top:.6rem;width:100%}
+.cx-stat b{display:block;font-family:var(--head);font-size:1.9rem;line-height:1.1;color:#E5483B}
+.cx-stat small{font-size:.5em;margin-left:.12em}
+.cx-stat em{display:block;font-style:normal;font-size:.8rem;line-height:1.5;color:var(--text-2);margin-top:.2rem}
+.cx-plus{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--char);color:var(--lime);margin-top:.9rem;transition:transform .3s}
+.cx-mini:hover .cx-plus{transform:rotate(90deg)}
+.cx-plus svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round}
+/* 展開狀態：左邊成果截圖、右邊品牌與成效；寬度固定為展開後的寬度，展開過程內容不會擠壓變形 */
+.cx-full{position:absolute;top:0;bottom:0;left:0;width:calc((100cqw - 42px) * 5.2 / 8.2);display:grid;grid-template-columns:55% 45%;color:#fff;opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
+.cx-item.on .cx-full{opacity:1;visibility:visible;transition-delay:.25s}
+.cx-shot{position:relative;display:grid;place-items:center;padding:1.6rem 1.4rem 3.4rem;background:radial-gradient(70% 60% at 12% 4%,rgba(155,110,234,.42),transparent 70%),radial-gradient(60% 55% at 88% 100%,rgba(230,255,68,.2),transparent 70%),#262626}
+.cx-shot::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.1) 1px,transparent 1.4px);background-size:16px 16px;-webkit-mask-image:linear-gradient(transparent,#000 40%,#000 70%,transparent);mask-image:linear-gradient(transparent,#000 40%,#000 70%,transparent)}
+.cx-shot img{position:relative;display:block;max-width:100%;max-height:100%;width:auto;height:auto;filter:drop-shadow(0 24px 34px rgba(0,0,0,.6))}
+.cx-cap{position:absolute;left:1.1rem;bottom:1.2rem;z-index:1;background:var(--lime);color:var(--char);font-family:var(--head);font-weight:700;font-size:1rem;line-height:1.45;padding:.65rem 1rem;border-radius:14px;box-shadow:0 14px 26px -10px rgba(0,0,0,.6);transform:rotate(-2deg)}
+.cx-info{display:flex;flex-direction:column;padding:2rem 1.5rem 1.5rem}
+.cx-eyebrow{font-family:var(--eyebrow);font-size:.76rem;font-weight:700;letter-spacing:.12em;color:var(--lime)}
+.cx-info h3{font-size:1.55rem;margin-top:.35rem;color:#fff}
+.cx-line{font-size:.9rem;color:#BDBDBD;margin-top:.2rem}
+.cx-item.on .cx-shot img{animation:cx-up .7s cubic-bezier(.2,.8,.2,1) .3s both}
+.cx-item.on .cx-cap{animation:cx-pop .55s cubic-bezier(.3,1.5,.5,1) .7s both}
+.cx-item.on .cx-info>*{animation:cx-fade .5s ease .4s both}
+.cx-item.on .cx-info>:nth-child(2){animation-delay:.45s}.cx-item.on .cx-info>:nth-child(3){animation-delay:.5s}
+.cx-item.on .cx-info>:nth-child(4){animation-delay:.55s}.cx-item.on .cx-info>:nth-child(5){animation-delay:.6s}
+@keyframes cx-up{from{opacity:0;transform:translateY(18px)}}
+@keyframes cx-pop{from{opacity:0;transform:rotate(-6deg) scale(.7)}}
+@keyframes cx-fade{from{opacity:0;transform:translateX(12px)}}
+.case-nums{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin:1.1rem 0 1.2rem}
+.case-nums div{border-top:2px solid rgba(255,255,255,.22);padding-top:.55rem}
+.case-nums b{display:block;font-family:var(--head);font-size:clamp(1.7rem,2.6vw,2.1rem);line-height:1.15;color:var(--lime)}
+.case-nums small{font-size:.5em;margin-left:.15em}
+.case-nums div>span{display:block;font-size:.82rem;color:#BDBDBD;margin-top:.15rem;line-height:1.5}
+.case-ai{display:flex;align-items:flex-start;gap:.45em;margin-top:auto;background:rgba(155,110,234,.2);color:#E6DCFB;border-radius:10px;padding:.55rem .75rem;font-size:.84rem;font-weight:700;line-height:1.55}
+.case-ai svg{flex:0 0 auto;width:16px;height:16px;margin-top:.2em;fill:#B99AF2}
+.cs-ctrl{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin:1.4rem 0 2rem}
+.cx-count{font-family:var(--eyebrow);font-weight:700;font-size:1rem;letter-spacing:.08em;color:var(--mute)}
+.cx-count b{color:var(--char);font-size:1.4rem}
+.cs-arrows{display:flex;gap:.6rem}
+.cs-btn{width:50px;height:50px;border-radius:50%;border:1.5px solid var(--char);background:transparent;color:var(--char);display:grid;place-items:center;cursor:pointer;transition:background .2s,color .2s,transform .15s}
+.cs-btn:hover{background:var(--char);color:var(--lime)}
+.cs-btn:active{transform:scale(.94)}
+.cs-btn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+/* 產業標籤：整句收在同一個白框裡，標籤改淺紫 */
+.inds{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;width:fit-content;max-width:100%;background:var(--white);border-radius:999px;padding:.55rem .6rem .55rem 1.3rem;box-shadow:0 1px 2px rgba(0,0,0,.05)}
+.inds em{display:inline-flex;align-items:center;gap:.4em;font-style:normal;font-family:var(--head);font-weight:700;font-size:.98rem;color:var(--char);margin-right:.5rem}
+.inds em svg{width:16px;height:16px;fill:var(--violet)}
+.inds span{background:var(--lavender);color:var(--plum);font-family:var(--head);font-weight:700;padding:.35rem 1rem;border-radius:999px;font-size:.9rem}
+
+/* flow */
+.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;counter-reset:f}
+.flow div{background:var(--char-2);border-radius:18px;padding:1.5rem 1.3rem;position:relative}
+.flow div::before{counter-increment:f;content:"0" counter(f);font-family:var(--head);font-weight:700;font-size:2rem;color:var(--lime);line-height:1}
+.flow h3{font-family:var(--sans);font-size:1.08rem;margin:.6rem 0 .2rem}
+.flow p{font-size:.9rem;color:#BDBDBD}
+
+/* faq */
+.faq .wrap{display:grid;grid-template-columns:.8fr 1.2fr;gap:clamp(2rem,5vw,4rem)}
+details{background:var(--white);border-radius:14px;padding:1.1rem 1.3rem;margin-bottom:.7rem}
+summary{cursor:pointer;list-style:none;font-weight:700;display:flex;justify-content:space-between;gap:1rem}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"";flex:none;width:26px;height:26px;border-radius:50%;background:var(--lime) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231C1C1C' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M12 6v12M6 12h12'/%3E%3C/svg%3E") center/13px no-repeat;transition:transform .2s}
+details[open] summary::after{transform:rotate(45deg)}
+details p{color:var(--text-2);margin-top:.6rem;font-size:.95rem}
+
+/* form */
+.form-sec .wrap{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(2rem,5vw,4rem)}
+.form-sec .lead{color:#CFCFCF;margin-top:1rem}
+.scarce{display:inline-flex;gap:.6em;align-items:center;margin-top:1.8rem;font-size:.88rem;border:1px solid #444;border-radius:999px;padding:.45rem 1rem}
+.scarce i{width:8px;height:8px;border-radius:50%;background:var(--lime);animation:pulse 1.6s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(230,255,68,.6)}70%{box-shadow:0 0 0 8px rgba(230,255,68,0)}}
+.contact{margin-top:2rem;display:grid;gap:.5rem;font-size:.92rem;color:#BDBDBD}
+.contact a{color:#fff;font-weight:700;text-decoration:none}
+form{background:var(--white);color:var(--text);border-radius:24px;padding:clamp(1.4rem,3vw,2.2rem);display:grid;grid-template-columns:1fr 1fr;gap:1rem 1.1rem}
+.field{display:grid;gap:.35rem}
+.full{grid-column:1/-1}
+label,.lbl{font-size:.88rem;font-weight:700}
+.req{color:#E5483B}.opt{color:var(--mute);font-weight:400;font-size:.8rem}
+input[type=text],input[type=email],textarea{width:100%;font:inherit;font-size:1rem;padding:.8rem .95rem;border:1.5px solid #DADADA;border-radius:12px;background:#FAFAFA;color:var(--text);transition:border-color .15s, box-shadow .15s, background .15s}
+textarea{min-height:84px;resize:vertical}
+input:focus,textarea:focus{outline:none;border-color:var(--violet);background:#fff;box-shadow:0 0 0 4px var(--lavender)}
+.field.err input{border-color:#E5483B}
+.field .msg{display:none;font-size:.8rem;color:#E5483B}
+.field.err .msg{display:block}
+.chips{display:flex;flex-wrap:wrap;gap:.5rem}
+.chips label{font-weight:500;cursor:pointer}
+.chips input{position:absolute;opacity:0;pointer-events:none}
+.chips span{display:inline-block;font-size:.88rem;padding:.45rem .9rem;border:1.5px solid #DADADA;border-radius:999px;transition:all .15s}
+.chips input:checked + span{background:var(--char);border-color:var(--char);color:var(--lime)}
+.chips input:focus-visible + span{box-shadow:0 0 0 3px var(--lavender)}
+form .btn{grid-column:1/-1;margin-top:.4rem;background:var(--char);color:var(--lime);box-shadow:none}
+form .btn:hover{background:#000;box-shadow:0 12px 24px -12px rgba(0,0,0,.5)}
+.privacy{grid-column:1/-1;text-align:center;font-size:.8rem;color:var(--mute)}
+.done{display:none;grid-column:1/-1;text-align:center;padding:2rem 0}
+.done h3{font-size:1.7rem;margin-bottom:.4rem}
+.done .btn{margin-top:1.2rem;background:#06C755;color:#fff}
+form.sent > :not(.done){display:none}
+form.sent .done{display:block}
+
+/* 頁尾：依官網 Elementor 設定（#34354B 底＋80% 黑色 multiply 疊層） */
+footer{background:#34354B;position:relative;color:#fff;padding:70px 0 0;font-size:16px}
+footer::before{content:"";position:absolute;inset:0;background:#000;opacity:.8;mix-blend-mode:multiply;pointer-events:none}
+footer .wrap{position:relative;z-index:1}
+.f-cols{display:grid;grid-template-columns:26.6% 1fr 20% 18%;gap:2rem}
+.f-col h4{font-size:16px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:#E6FF44;margin-bottom:18px;line-height:1.3}
+.f-about p{line-height:1.9;margin-bottom:1.6rem}
+.f-social{display:flex;gap:12px;list-style:none;margin-top:2.2rem}
+.f-social a{width:34px;height:34px;border-radius:50%;border:2px solid currentColor;display:grid;place-items:center;transition:background .3s,color .3s}
+.f-social svg{width:16px;height:16px;fill:currentColor}
+.f-social .fb{color:#fff;border-color:#6288D5}.f-social .fb:hover{background:#6288D5}
+.f-social .yt{color:#CD2A2A}.f-social .yt:hover{background:#CD2A2A;color:#fff}
+.f-social .ig{color:#F58181}.f-social .ig:hover{background:#F58181;color:#fff}
+.f-info{list-style:none;display:grid;gap:11px}
+.f-info li{display:flex;gap:.7rem;align-items:flex-start;line-height:1.7}
+.f-info svg{width:14px;height:14px;fill:#fff;flex:none;margin-top:.35em}
+.f-info a{text-decoration:none}
+.f-links{list-style:none;display:grid;gap:10px}
+.f-links a{text-decoration:none;line-height:2em;transition:color .3s}
+.f-links a:hover,.f-info a:hover{color:#E6FF44}
+.f-copy{text-align:center;color:#AAAAAA;font-size:17px;letter-spacing:.03em;margin:80px 0 0;padding-bottom:20px}
+@media (max-width:980px){.f-cols{grid-template-columns:1fr 1fr}.f-copy{font-size:16px}}
+@media (max-width:600px){
+  footer{padding-bottom:5.5rem}
+  .f-cols{grid-template-columns:1fr;text-align:center;gap:48px}
+  .f-social{justify-content:center}
+  .f-info{justify-items:center}
+  .f-copy{font-size:15px}
+}
+
+.mbar{display:none}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(22px);transition:opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1)}
+.rv.on{opacity:1;transform:none}
+.hero .rv{animation:up .8s forwards}
+.hero .rv:nth-child(2){animation-delay:.08s}.hero .rv:nth-child(3){animation-delay:.16s}.hero .rv:nth-child(4){animation-delay:.24s}.hero .rv:nth-child(5){animation-delay:.32s}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.rv,.ai li,.stage{opacity:1;transform:none}.circles .full{opacity:1}.circles .half,.orbit{display:none}.halo{opacity:.45}}
+
+/* 4 階段：平板／手機改為垂直時間軸 */
+@media (max-width:900px){
+  .axis{display:none}
+  .st-ic{width:42px;height:42px;border-radius:12px}
+  .st-ic svg{width:24px;height:24px}
+  .stages{grid-template-columns:1fr;gap:1rem;padding-left:36px}
+  .stages::before{content:"";position:absolute;left:11px;top:14px;bottom:14px;width:3px;border-radius:3px;background:linear-gradient(#8A8A8A,#2F6BD0 35%,var(--violet) 68%,var(--lime))}
+  .stage::before{content:"";position:absolute;left:-36px;top:22px;width:25px;height:25px;border-radius:50%;background:var(--c);border:5px solid var(--fog);z-index:1}
+  .stage[data-s="4"]::before{box-shadow:0 0 0 6px rgba(230,255,68,.35)}
+  .st-card{padding:1.25rem 1.2rem}
+  .st-goal{display:inline-block}
+  .st-no{font-size:1.9rem}
+  .st-card h3{font-size:1.1rem}
+  .st-pain,.st-fix p{font-size:.94rem}
+}
+@media (max-width:980px){
+  .hero .wrap,.report .wrap,.faq .wrap,.form-sec .wrap{grid-template-columns:1fr}
+  .plan-grid,.g-grid,.steps{grid-template-columns:1fr}
+  /* 成功案例：改成上下排列，展開的品牌在原位置打開，其他收成一列「品牌＋數字」 */
+  .cx{flex-direction:column;height:auto;gap:10px}
+  .cx-item{flex:none}
+  .cx-mini{position:relative;inset:auto;width:100%;display:grid;grid-template-columns:auto 1fr auto auto;grid-template-areas:"no tag stat plus" "no name stat plus";align-items:center;column-gap:.9rem;row-gap:.1rem;padding:1rem 1.1rem}
+  .cx-item.on .cx-mini{display:none}
+  .cx-no{grid-area:no}
+  .cx-tag{grid-area:tag;justify-self:start;margin-top:0}
+  .cx-name{grid-area:name;margin-top:0;font-size:1.05rem}
+  .cx-stat{grid-area:stat;margin:0;border:0;padding:0;width:auto;text-align:right}
+  .cx-stat b{font-size:1.5rem}
+  .cx-stat em{display:none}
+  .cx-plus{grid-area:plus;margin:0;width:30px;height:30px}
+  .cx-full{position:relative;width:auto;display:none;grid-template-columns:1fr}
+  .cx-item.on .cx-full{display:grid}
+  .cx-shot{padding:1.4rem 1rem 3.6rem}
+  .cx-cap{left:1rem;bottom:1rem;font-size:.92rem}
+  .cx-info{padding:1.4rem 1.2rem 1.4rem}
+  .inds{width:100%;border-radius:20px;padding:1rem}
+  .inds em{width:100%;margin:0 0 .2rem}
+  .flow{grid-template-columns:1fr 1fr}
+  .hv{width:100%;max-width:600px;margin:0 auto}
+}
+@media (max-width:600px){
+  .wrap{width:calc(100% - 32px)}
+  .top .btn{display:none}
+  .flow{grid-template-columns:1fr}
+  form{grid-template-columns:1fr}
+  .g{padding:1.5rem 1.2rem}
+  .g ul{padding:.9rem 1rem;font-size:.92rem}
+  .cta-row .btn{width:100%}
+  .ai .q{white-space:normal}
+  .mbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:60;gap:.6rem;padding:.7rem 16px calc(.7rem + env(safe-area-inset-bottom));background:rgba(28,28,28,.95);backdrop-filter:blur(10px);border-top:1px solid #333;transition:transform .3s}
+  .mbar.hide{transform:translateY(110%)}
+  .mbar .btn{flex:1;padding:.85rem 1rem;font-size:.98rem}
+  .mbar .ln{flex:0 0 auto;background:#06C755;color:#fff;box-shadow:none}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top"><img class="avatar" src="images/dog-logo.png" alt="犬哥網站 Logo" width="50" height="50"><span class="t">犬哥網站</span></a>
+    <a class="btn js-cta" href="#apply">免費申請健檢</a>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- HERO -->
+<section class="hero dark">
+  <span class="sphere" style="width:520px;height:520px;right:-160px;top:-160px"></span>
+  <span class="sphere" style="width:360px;height:360px;left:-180px;bottom:-140px"></span>
+  <div class="wrap">
+    <div>
+      <p class="offer rv"><span class="nw badge">限時優惠</span><span class="nw">免費 SEO＋GEO 健檢</span></p>
+      <h1 class="rv"><span class="nw">客戶開始問 AI 了，</span><br><span class="nw">答案裡<em>有你嗎？</em></span></h1>
+      <p class="lead rv">看出你的品牌在 Google 排名、AI 平台中的曝光 &amp; 提及率。</p>
+      <ul class="ticks rv">
+        <li>贈送完整健檢報告</li>
+        <li>檢查各大主流 AI 平台提及率</li>
+        <li>網站體質 &amp; 內容佈局，一次分析</li>
+      </ul>
+      <div class="rv">
+        <div class="cta-row">
+          <a class="btn js-cta" href="#apply">立即申請免費健檢 <span class="ar">↓</span></a>
+          <a class="btn btn-line" href="#plans">看服務方案</a>
+        </div>
+        <p class="micro">不綁約・1 分鐘填完</p>
+      </div>
+    </div>
+
+    <div class="hv" role="img" aria-label="示意圖：在 AI 搜尋「台北推薦的室內設計公司？」時，你的品牌被列為第一優先推薦；同時取得 Google 排名與 AI 提及，AI 曝光機會提升 237%">
+      <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+        <defs>
+          <linearGradient id="hv-gem-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3D7BF5"/><stop offset=".55" stop-color="#9B72F2"/><stop offset="1" stop-color="#F06B5B"/></linearGradient>
+          <linearGradient id="hv-gold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE97A"/><stop offset="1" stop-color="#E9A400"/></linearGradient>
+          <linearGradient id="hv-bar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F2FF8A"/><stop offset="1" stop-color="#A9C200"/></linearGradient>
+          <symbol id="hv-gem" viewBox="0 0 24 24"><path d="M12 1.5C12.6 7 17 11.4 22.5 12C17 12.6 12.6 17 12 22.5C11.4 17 7 12.6 1.5 12C7 11.4 11.4 7 12 1.5Z" fill="url(#hv-gem-g)"/></symbol>
+          <symbol id="hv-goo" viewBox="0 0 24 24"><g fill="none" stroke-width="3.4"><circle cx="12" cy="12" r="8" stroke="#4285F4" stroke-dasharray="6.98 50.27"/><circle cx="12" cy="12" r="8" stroke="#34A853" stroke-dasharray="12.57 50.27" stroke-dashoffset="-6.98"/><circle cx="12" cy="12" r="8" stroke="#FBBC05" stroke-dasharray="9.77 50.27" stroke-dashoffset="-19.55"/><circle cx="12" cy="12" r="8" stroke="#EA4335" stroke-dasharray="15.36 50.27" stroke-dashoffset="-29.32"/><path d="M12 12h8" stroke="#4285F4"/></g></symbol>
+          <symbol id="hv-room1" viewBox="0 0 120 78"><rect width="120" height="78" fill="#EADFD1"/><rect y="56" width="120" height="22" fill="#C9A47E"/><rect x="12" y="9" width="30" height="34" rx="2" fill="#F8F4EC" stroke="#D6C6B1" stroke-width="2"/><path d="M27 9v34M12 26h30" stroke="#D6C6B1" stroke-width="2"/><path d="M86 0v13" stroke="#A8957C" stroke-width="1.2"/><path d="M79 13h14l-3 6h-8z" fill="#F4E7C6"/><rect x="48" y="38" width="46" height="15" rx="5" fill="#F4EFE7"/><rect x="44" y="47" width="54" height="12" rx="4" fill="#E2D8CA"/><rect x="60" y="62" width="22" height="4" rx="2" fill="#94704E"/><circle cx="108" cy="38" r="7" fill="#6E9A5A"/><circle cx="104" cy="31" r="5.5" fill="#86B06E"/><circle cx="112" cy="31" r="4.5" fill="#7BA564"/><rect x="103" y="44" width="10" height="12" rx="2" fill="#B98F68"/></symbol>
+          <symbol id="hv-room2" viewBox="0 0 120 78"><rect width="120" height="78" fill="#E4E1DC"/><rect y="56" width="120" height="22" fill="#B8A089"/><rect x="70" y="8" width="38" height="36" rx="2" fill="#F5F3EF" stroke="#CFC8BE" stroke-width="2"/><path d="M89 8v36" stroke="#CFC8BE" stroke-width="2"/><rect x="14" y="40" width="44" height="14" rx="5" fill="#D9D2C6"/><rect x="10" y="48" width="52" height="11" rx="4" fill="#C7BEB0"/><circle cx="66" cy="44" r="6" fill="#7FA36B"/><rect x="62" y="49" width="8" height="8" rx="2" fill="#A98463"/><rect x="24" y="62" width="24" height="4" rx="2" fill="#8A6B4D"/></symbol>
+        </defs>
+      </svg>
+      <div class="hv-stage">
+        <div class="hv-scene">
+          <span class="hv-orbit"><span class="hv-spin"><i></i></span></span>
+          <span class="hv-orbit o2"><span class="hv-spin"><i></i></span></span>
+          <span class="hv-floor"></span>
+
+          <div class="hv-card hv-g">
+            <div class="hv-glogo"><span style="color:#4285F4">G</span><span style="color:#EA4335">o</span><span style="color:#FBBC05">o</span><span style="color:#4285F4">g</span><span style="color:#34A853">l</span><span style="color:#EA4335">e</span></div>
+            <div class="hv-gbar"><i></i><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20"/></svg></div>
+            <div class="hv-gres">
+              <div class="top"><b>1</b><i></i><i></i></div>
+              <div><b>2</b><i></i><i></i></div>
+              <div><b>3</b><i></i><i></i></div>
+            </div>
+          </div>
+
+          <div class="hv-card hv-ais">
+            <div><span><img src="images/chatgpt-logo.png" alt="" width="192" height="192"></span><span><svg><use href="#hv-gem"/></svg></span><span><svg><use href="#hv-goo"/></svg></span></div>
+          </div>
+
+          <div class="hv-card hv-main">
+            <div class="hv-head">
+              <div class="hv-who"><img src="images/chatgpt-logo.png" alt="" width="192" height="192"><b>AI 搜尋</b></div>
+              <div class="hv-q"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20"/></svg><span>台北推薦的室內設計公司？</span></div>
+            </div>
+            <div class="hv-say">我會優先推薦：</div>
+            <div class="hv-rows">
+              <div class="hv-row you">
+                <svg class="hv-crown" viewBox="0 0 46 36"><path d="M4 30L2 8l11 9 10-15 10 15 11-9-2 22z" fill="url(#hv-gold)" stroke="#8A6200" stroke-width="1.6" stroke-linejoin="round"/><circle cx="2" cy="8" r="2.6" fill="#FFE97A"/><circle cx="23" cy="2.5" r="2.6" fill="#FFE97A"/><circle cx="44" cy="8" r="2.6" fill="#FFE97A"/></svg>
+                <svg class="hv-burst" viewBox="0 0 50 50"><path d="M8 30L16 22M22 18L24 6M32 24L44 16" stroke="#E6FF44" stroke-width="4" stroke-linecap="round"/></svg>
+                <span class="hv-n">1</span>
+                <span class="hv-t"><b>你的品牌</b><small>案例豐富・專業文章完整・評價優秀</small></span>
+                <span class="hv-th"><svg><use href="#hv-room1"/></svg></span>
+              </div>
+              <div class="hv-row">
+                <span class="hv-n">2</span>
+                <span class="hv-t">A 設計｜擅長小坪數空間</span>
+                <span class="hv-th"><svg><use href="#hv-room2"/></svg></span>
+              </div>
+              <div class="hv-row">
+                <span class="hv-n">3</span>
+                <span class="hv-t">B 室內裝修｜價格透明</span>
+                <span class="hv-th"><svg><use href="#hv-room1"/></svg></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="hv-pill hv-p1"><svg viewBox="0 0 24 24"><rect x="3" y="13" width="4.5" height="8" rx="1.2" fill="#E6FF44"/><rect x="9.8" y="8" width="4.5" height="13" rx="1.2" fill="#E6FF44"/><rect x="16.5" y="3" width="4.5" height="18" rx="1.2" fill="#E6FF44"/></svg><b>Google 排名</b></div>
+          <div class="hv-pill hv-p2"><svg viewBox="0 0 24 24"><path d="M12 1.5C12.6 7 17 11.4 22.5 12C17 12.6 12.6 17 12 22.5C11.4 17 7 12.6 1.5 12C7 11.4 11.4 7 12 1.5Z" fill="#E6FF44"/></svg><b>AI 提及</b></div>
+          <div class="hv-pill hv-p3"><svg viewBox="0 0 24 24"><path d="M3 19L2 7l5.5 4.5L12 4l4.5 7.5L22 7l-1 12z" fill="#E6FF44"/></svg><b>優先推薦</b></div>
+          <div class="hv-pill hv-p4"><svg viewBox="0 0 24 24" fill="none" stroke="#E6FF44" stroke-width="2.4"><path d="M1.5 12S5.5 5 12 5s10.5 7 10.5 7-4 7-10.5 7S1.5 12 1.5 12z"/><circle cx="12" cy="12" r="3.4" fill="#E6FF44"/></svg><b>品牌曝光</b></div>
+
+          <div class="hv-card hv-stat">
+            <div><span class="hv-stat-l">AI 曝光機會</span><strong>+<span class="hv-num" data-to="237">237</span>%</strong></div>
+            <svg viewBox="0 0 85 70"><rect class="hv-b" x="4" y="50" width="13" height="18" rx="3" fill="url(#hv-bar)"/><rect class="hv-b" x="23" y="40" width="13" height="28" rx="3" fill="url(#hv-bar)"/><rect class="hv-b" x="42" y="28" width="13" height="40" rx="3" fill="url(#hv-bar)"/><rect class="hv-b" x="61" y="14" width="13" height="54" rx="3" fill="url(#hv-bar)"/><path class="hv-arrow" d="M4 38C26 34 46 22 72 5" fill="none" stroke="#E6FF44" stroke-width="3" stroke-linecap="round" pathLength="1"/><path class="hv-arrow-h" d="M63 4l10-1-3 9" fill="none" stroke="#E6FF44" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PAIN：網站行銷 4 階段 -->
+<section class="light">
+  <span class="sphere" style="width:480px;height:480px;right:-200px;top:-200px"></span>
+  <div class="wrap">
+    <div class="head rv">
+      <h2>流量卡關，是哪個階段出了問題？</h2>
+      <div class="st-cta">
+        <p><span class="nw">不確定自己卡在哪一關？</span><span class="nw"><em>免費健檢</em>幫你找出來</span></p>
+      </div>
+    </div>
+
+    <div class="stages rv">
+      <article class="stage" data-s="1">
+        <div class="st-card">
+          <div class="st-top"><span class="st-no">01</span><span class="st-goal">打地基</span>
+            <span class="st-ic ic1" aria-hidden="true"><svg viewBox="0 0 32 32"><rect x="3" y="5" width="26" height="22" rx="3"/><path d="M3 11h26M7.5 8h.01M10.5 8h.01"/><rect class="pop b1" x="7" y="15" width="8" height="8" rx="1.5"/><path class="dr b2" pathLength="1" d="M19 16h6"/><path class="dr b3" pathLength="1" d="M19 20.5h4"/></svg></span></div>
+          <h3>沒有網站，沒人找得到你</h3>
+          <p class="st-pain">網站老舊或還沒有官網，客戶搜尋時直接略過你。</p>
+          <div class="st-fix"><span class="lbl">解法</span><p>製作官網／改版</p></div>
+        </div>
+      </article>
+      <article class="stage" data-s="2">
+        <div class="st-card">
+          <div class="st-top"><span class="st-no">02</span><span class="st-goal">打地基</span>
+            <span class="st-ic ic2" aria-hidden="true"><svg viewBox="0 0 32 32"><g class="mag"><circle cx="14" cy="14" r="10"/><path d="M21.5 21.5L28 28"/><path class="dr pulse" pathLength="1" d="M7.5 14h3l1.8-4 3.4 8 2-4h2.8"/></g></svg></span></div>
+          <h3>網站架構出問題</h3>
+          <p class="st-pain">速度、結構、技術 SEO 沒做好，Google 跟 AI 都不喜歡。</p>
+          <div class="st-fix"><span class="lbl">解法</span><p>完整網站健檢</p></div>
+        </div>
+      </article>
+      <article class="stage" data-s="3">
+        <div class="st-card">
+          <div class="st-top"><span class="st-no">03</span><span class="st-goal">衝流量</span>
+            <span class="st-ic ic3" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M4 4v24h24"/><path class="dr trend" pathLength="1" d="M9 21l5-6 4 3 8-9"/><path class="head" d="M20 9h6v6"/></svg></span></div>
+          <h3>關鍵字不夠，沒流量</h3>
+          <p class="st-pain">數位足跡太少，排名上不去，也無法「餵給」AI。</p>
+          <div class="st-fix"><span class="lbl">解法</span><p>建立基礎 SEO，<span class="nw">佈局關鍵字、AIO</span></p></div>
+        </div>
+      </article>
+      <article class="stage" data-s="4">
+        <div class="st-card">
+          <span class="st-badge">新流量入口</span>
+          <div class="st-top"><span class="st-no">04</span><span class="st-goal">搶未來</span>
+            <span class="st-ic ic4" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M6 6h15a3 3 0 0 1 3 3v11a3 3 0 0 1-3 3h-8l-5 4.5V23H6a3 3 0 0 1-3-3V9a3 3 0 0 1 3-3z"/><path class="fill sp1" d="M13.5 9.5Q14.2 13.8 18.5 14.5Q14.2 15.2 13.5 19.5Q12.8 15.2 8.5 14.5Q12.8 13.8 13.5 9.5Z"/><path class="fill sp2" d="M27.5 1.5Q27.9 4.1 30.5 4.5Q27.9 4.9 27.5 7.5Q27.1 4.9 24.5 4.5Q27.1 4.1 27.5 1.5Z"/></svg></span></div>
+          <h3>AI 沒提到你</h3>
+          <p class="st-pain">客戶問 ChatGPT 推薦廠商，名單裡只有競爭對手。</p>
+          <div class="st-fix"><span class="lbl">解法</span><p>GEO 優化，<span class="nw">AI 提及與引用率<b class="up">↑</b></span></p></div>
+        </div>
+      </article>
+    </div>
+    <div class="axis" aria-hidden="true"><span class="a1"><b>打地基</b></span><span><b>衝流量</b></span><span><b>搶未來</b></span></div>
+  </div>
+</section>
+
+<!-- SEO + GEO -->
+<section class="dual-sec">
+  <div class="wrap">
+    <div class="dual rv">
+      <div class="head">
+        <p class="eyebrow-en">SEO x GEO Marketing Services</p>
+        <h2><span class="nw">為什麼要同時做</span> <span class="nw">SEO＋GEO？</span></h2>
+      </div>
+      <div class="venn">
+        <div class="side seo">
+          <div class="side-hd">
+            <span class="side-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20"/></svg></span>
+            <h3>SEO<small>搜尋引擎優化</small></h3>
+          </div>
+          <p>提升網站在 Google 的<br>自然流量與排名</p>
+          <div class="pills"><span>曝光</span><span>排名</span><span>點擊</span></div>
+        </div>
+        <div class="circles">
+          <span class="halo" aria-hidden="true"></span>
+          <img class="half l" src="images/SEOxGEO雙引擎-00.png" alt="" aria-hidden="true">
+          <img class="half r" src="images/SEOxGEO雙引擎-00.png" alt="" aria-hidden="true">
+          <img class="full" src="images/SEOxGEO雙引擎-00.png" alt="SEO（Google、Bing、Yahoo）與 GEO（ChatGPT、Gemini、Perplexity）的交集：最大化品牌曝光">
+          <span class="orbit o1" aria-hidden="true"><i></i></span>
+          <span class="orbit o2" aria-hidden="true"><i></i></span>
+        </div>
+        <div class="side geo">
+          <div class="side-hd">
+            <span class="side-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M11 3.5l1.9 5.1 5.1 1.9-5.1 1.9L11 17.5l-1.9-5.1L4 10.5l5.1-1.9z"/><path d="M18.5 15l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z"/></svg></span>
+            <h3>GEO<small>生成式引擎優化</small></h3>
+          </div>
+          <p>讓品牌出現在<br>生成式 AI 的回答中</p>
+          <div class="pills"><span>提及率</span><span>情緒值</span><span>引用連結</span></div>
+        </div>
+      </div>
+      <p class="dual-end"><span class="nw">Google 搜尋＋AI 提及，</span><span class="nw"><em>全方位放大曝光量</em></span></p>
+    </div>
+  </div>
+</section>
+
+<!-- REPORT -->
+<section class="report dark">
+  <div class="wrap">
+    <div class="rv">
+      <h2>免費送你一份<br><span class="hl">SEO＋GEO 健檢報告</span></h2>
+      <p class="lead">由顧問依你的網站實際檢測，告訴你哪裡需要改善。</p>
+      <a class="btn js-cta" href="#apply">我也要這份報告 <span class="ar">↓</span></a>
+    </div>
+    <div class="sheet rv">
+      <div class="sh"><img class="avatar" src="images/dog-logo.png" alt="" width="30" height="30" style="width:30px;height:30px">犬哥網站<span>健檢分析書內容</span></div>
+      <div class="row"><span class="n">01</span><div><h3>AI 提及健檢分析</h3><p>品牌字檢測：AI 是否提及你的品牌</p></div><span class="st ng">需改善</span></div>
+      <div class="row"><span class="n">02</span><div><h3>網站體質分析</h3><p>網頁架構檢核、AI 看得懂你的網站嗎？NAP 一致性、Schema</p></div><span class="st warn">建議有</span></div>
+      <div class="row"><span class="n">03</span><div><h3>關鍵字現況分析</h3><p>網站平均排名、值得經營的關鍵字有哪些<span class="nw">（肥頭、長尾、競品）</span></p></div><span class="st ok">通過</span></div>
+      <div class="row"><span class="n">04</span><div><h3>優先優化建議</h3><p>結合內容與技術優化，清楚列出下一步</p></div></div>
+      <div class="tabs"><span>GEO 網站健檢</span><span>FAQ 規劃</span><span>AI 品牌字</span><span>E-E-A-T 狀況</span><span>站外權威聲量</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- PLANS -->
+<section class="light" id="plans">
+  <span class="sphere" style="width:420px;height:420px;left:-180px;bottom:-160px"></span>
+  <div class="wrap">
+    <div class="head rv">
+      <h2>健檢之後，選最適合你的方案</h2>
+      <p class="sub">不確定選哪個？先做免費健檢，顧問依報告建議</p>
+    </div>
+    <div class="plan-grid">
+      <article class="plan rv">
+        <span class="ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1C1C1C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg></span>
+        <h3>AI SEO 優化<br>加贈廣告投放</h3>
+        <ul>
+          <li>關鍵字企劃分析書，鎖定含金量關鍵字</li>
+          <li>3,000～4,000 字高排名長文（含製圖）</li>
+          <li>贈送 Google 廣告代操，放大關鍵字成效</li>
+          <li>每季固定費用，預算好控制</li>
+        </ul>
+        <a class="go js-cta" href="#apply">先健檢，看我適不適合 ↓</a>
+      </article>
+      <article class="plan hot rv">
+        <span class="rib">績效保證</span>
+        <span class="ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1C1C1C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg></span>
+        <h3>保證 GEO 提及<br>達標才收全額</h3>
+        <ul>
+          <li>自選想被 AI 提及的問題</li>
+          <li>提升 ChatGPT／Gemini／AI Overviews 提及與引用</li>
+          <li>關鍵字＋AI 摘要雙重保證</li>
+          <li>期中／期末 KPI 驗收，成效透明</li>
+        </ul>
+        <a class="go js-cta" href="#apply">先健檢，看我適不適合 ↓</a>
+      </article>
+      <article class="plan rv">
+        <span class="ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1C1C1C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18M8 21h8"/></svg></span>
+        <h3>SEO/GEO＋網頁設計<br>一條龍</h3>
+        <ul>
+          <li>建站時就把 SEO 與 GEO 架構做進去</li>
+          <li>客製化設計，兼顧成效與美感</li>
+          <li>搭配 SEO 享網頁設計優惠價</li>
+          <li>前後台自由編輯、贈一年主機代管</li>
+        </ul>
+        <a class="go js-cta" href="#apply">先健檢，看我適不適合 ↓</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- GUARANTEE -->
+<section class="dark">
+  <span class="sphere" style="width:560px;height:560px;left:10%;top:-260px"></span>
+  <div class="wrap">
+    <div class="head rv">
+      <h2><span class="nw">SEO / GEO 服務成效</span> <span class="nw">＆ 安心保障</span></h2>
+    </div>
+    <div class="g-grid">
+      <div class="g y rv">
+        <span class="tag">保證 1：雙重成效</span>
+        <h3>卡位關鍵字及 AI 摘要版位</h3>
+        <ul><li>增加關鍵字總量，帶動網站流量與詢問</li><li>提升 AI 摘要版位曝光，搶奪 AI 黃金版位</li></ul>
+      </div>
+      <div class="g gr rv">
+        <span class="tag">保證 2：安心保障</span>
+        <h3>達標才收全額</h3>
+        <ul><li>期中／期末 KPI 驗收，階段性達成目標</li><li>若未達標，先暫停收款＋免費延期</li></ul>
+      </div>
+    </div>
+    <div class="steps rv">
+      <div><b>STEP 1</b><h4>挑選關鍵字 ＆ 目標問題</h4></div>
+      <div><b>STEP 2</b><h4>執行內容＋權威佈局</h4></div>
+      <div><b>STEP 3</b><h4>期中／期末 KPI 驗收</h4></div>
+    </div>
+    <p class="g-note rv"><span class="nw">成效看得見，</span><span class="nw">合作最安心<span class="ic3d" aria-hidden="true"><svg viewBox="0 0 64 64">
+      <defs>
+        <linearGradient id="g3d-face" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F8FFB0"/><stop offset=".45" stop-color="#E6FF44"/><stop offset="1" stop-color="#A9C200"/></linearGradient>
+        <linearGradient id="g3d-gloss" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".9"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+        <clipPath id="g3d-clip"><path d="M32 6L52 13V30C52 43 43 52 32 57C21 52 12 43 12 30V13Z"/></clipPath>
+      </defs>
+      <path d="M32 9.5L52 16.5V33.5C52 46.5 43 55.5 32 60.5C21 55.5 12 46.5 12 33.5V16.5Z" fill="#6F8000"/>
+      <path d="M32 6L52 13V30C52 43 43 52 32 57C21 52 12 43 12 30V13Z" fill="url(#g3d-face)"/>
+      <path d="M32 9.5L48.5 15.3V30C48.5 41 41 49 32 53.2C23 49 15.5 41 15.5 30V15.3Z" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="1.2"/>
+      <path d="M32 6L52 13V23C42 19 24 19 12 27V13Z" fill="url(#g3d-gloss)" opacity=".55"/>
+      <path d="M23 31.5L29.5 38L42 25" fill="none" stroke="#1C1C1C" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      <g clip-path="url(#g3d-clip)"><g class="glint"><rect x="-20" y="0" width="11" height="64" fill="#fff" opacity=".75" transform="skewX(-20)"/></g></g>
+      <path class="spk s1" d="M55 3l1.6 4.4L61 9l-4.4 1.6L55 15l-1.6-4.4L49 9l4.4-1.6z" fill="#fff"/>
+      <path class="spk s2" d="M7 38l1 2.8 2.8 1-2.8 1L7 45.6l-1-2.8-2.8-1 2.8-1z" fill="#E6FF44"/>
+      <path class="spk s3" d="M58 42l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z" fill="#fff"/>
+    </svg></span></span></p>
+  </div>
+</section>
+
+<!-- PROOF -->
+<section class="light">
+  <span class="sphere" style="width:460px;height:460px;right:-180px;top:-120px"></span>
+  <div class="wrap">
+    <div class="head cx-head rv">
+      <span class="medal" aria-hidden="true">
+        <svg viewBox="0 0 120 132">
+          <defs>
+            <linearGradient id="md-face" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F8FFB0"/><stop offset=".45" stop-color="#E6FF44"/><stop offset="1" stop-color="#A9C200"/></linearGradient>
+            <linearGradient id="md-rib-v" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#B48CF5"/><stop offset="1" stop-color="#6B45BF"/></linearGradient>
+            <linearGradient id="md-rib-l" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#EEFF80"/><stop offset="1" stop-color="#A9C200"/></linearGradient>
+            <linearGradient id="md-gloss" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".9"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+            <clipPath id="md-clip"><path d="M60 7L68.3 12.3L78 10.6L83.6 18.7L93.2 20.8L95.3 30.4L103.4 36L101.7 45.7L107 54L101.7 62.3L103.4 72L95.3 77.6L93.2 87.2L83.6 89.3L78 97.4L68.3 95.7L60 101L51.7 95.7L42 97.4L36.4 89.3L26.8 87.2L24.7 77.6L16.6 72L18.3 62.3L13 54L18.3 45.7L16.6 36L24.7 30.4L26.8 20.8L36.4 18.7L42 10.6L51.7 12.3Z"/></clipPath>
+            <clipPath id="md-avatar"><circle cx="60" cy="54" r="31"/></clipPath>
+          </defs>
+          <path d="M41 78L27 124L38 116L48 127L58 86Z" fill="url(#md-rib-v)"/>
+          <path d="M79 78L93 124L82 116L72 127L62 86Z" fill="url(#md-rib-l)"/>
+          <path d="M60 7L68.3 12.3L78 10.6L83.6 18.7L93.2 20.8L95.3 30.4L103.4 36L101.7 45.7L107 54L101.7 62.3L103.4 72L95.3 77.6L93.2 87.2L83.6 89.3L78 97.4L68.3 95.7L60 101L51.7 95.7L42 97.4L36.4 89.3L26.8 87.2L24.7 77.6L16.6 72L18.3 62.3L13 54L18.3 45.7L16.6 36L24.7 30.4L26.8 20.8L36.4 18.7L42 10.6L51.7 12.3Z" transform="translate(0 4)" fill="#6F8000"/>
+          <path d="M60 7L68.3 12.3L78 10.6L83.6 18.7L93.2 20.8L95.3 30.4L103.4 36L101.7 45.7L107 54L101.7 62.3L103.4 72L95.3 77.6L93.2 87.2L83.6 89.3L78 97.4L68.3 95.7L60 101L51.7 95.7L42 97.4L36.4 89.3L26.8 87.2L24.7 77.6L16.6 72L18.3 62.3L13 54L18.3 45.7L16.6 36L24.7 30.4L26.8 20.8L36.4 18.7L42 10.6L51.7 12.3Z" fill="url(#md-face)"/>
+          <path d="M18 46C24 24 42 12 60 12C78 12 96 24 102 46C88 36 74 32 60 32C46 32 32 36 18 46Z" fill="url(#md-gloss)" opacity=".55"/>
+          <circle cx="60" cy="54" r="35" fill="#1C1C1C"/>
+          <image href="images/dog-logo.png" x="29" y="23" width="62" height="62" clip-path="url(#md-avatar)"/>
+          <g clip-path="url(#md-clip)"><g class="glint"><rect x="-30" y="0" width="14" height="110" fill="#fff" opacity=".65" transform="skewX(-20)"/></g></g>
+          <path class="spk s1" d="M109 12l2.2 5.3 5.3 2.2-5.3 2.2-2.2 5.3-2.2-5.3-5.3-2.2 5.3-2.2z" fill="#9B6EEA"/>
+          <path class="spk s2" d="M9 26l1.7 4.1 4.1 1.7-4.1 1.7-1.7 4.1-1.7-4.1-4.1-1.7 4.1-1.7z" fill="#1C1C1C"/>
+          <path class="spk s3" d="M113 84l1.5 3.6 3.6 1.5-3.6 1.5-1.5 3.6-1.5-3.6-3.6-1.5 3.6-1.5z" fill="#9B6EEA"/>
+        </svg>
+      </span>
+      <div>
+        <p class="cx-kicker">Success Stories</p>
+        <h2><span class="sr-only">犬哥網站</span><span class="mk">成功案例</span></h2>
+        <p class="sub">累積超過 500 個客戶合作經驗</p>
+      </div>
+    </div>
+    <div class="cases rv">
+      <div class="cx">
+        <div class="cx-item on">
+          <button class="cx-mini" type="button" aria-label="查看泰豪興工業的成果">
+            <span class="cx-no">01</span><span class="cx-tag">工業製造</span><span class="cx-name">泰豪興工業</span>
+            <span class="cx-stat"><b>+8<small>倍</small></b><em>服務諮詢量成長</em></span>
+            <span class="cx-plus" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span>
+          </button>
+          <div class="cx-full">
+            <div class="cx-shot">
+              <img src="images/cases/thx-ai.png" alt="Google 搜尋「車床 CNC」：泰豪興工業同時出現在 AI 摘要與自然排名" width="584" height="511" loading="lazy">
+              <p class="cx-cap"><span class="nw">行業大字前 10 名</span><br><span class="nw">＆搶佔 AI 摘要！</span></p>
+            </div>
+            <div class="cx-info">
+              <p class="cx-eyebrow">CASE 01｜工業製造・To B</p>
+              <h3>泰豪興工業</h3>
+              <p class="cx-line">傳產工業型，數位轉型增加線上名單</p>
+              <div class="case-nums">
+                <div><b>+8<small>倍</small></b><span>服務諮詢量成長</span></div>
+                <div><b>+675<small>個</small></b><span><span class="nw">關鍵字排名</span><span class="nw">前 10 名</span></span></div>
+              </div>
+              <p class="case-ai"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.3 6.2 6.2 2.3-6.2 2.3L12 19.5l-2.3-6.2L3.5 11l6.2-2.3z"/></svg>ChatGPT ＆ Gemini <span class="nw">推薦廠牌</span></p>
+            </div>
+          </div>
+        </div>
+        <div class="cx-item">
+          <button class="cx-mini" type="button" aria-label="查看敘思花藝的成果">
+            <span class="cx-no">02</span><span class="cx-tag">電商零售</span><span class="cx-name">敘思花藝 SÜSS</span>
+            <span class="cx-stat"><b>17<small>倍</small></b><em>首頁關鍵字</em></span>
+            <span class="cx-plus" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span>
+          </button>
+          <div class="cx-full">
+            <div class="cx-shot">
+              <img src="images/cases/suss-ai.png" alt="ChatGPT 推薦花店：敘思花藝列為優先推薦" width="581" height="570" loading="lazy">
+              <p class="cx-cap"><span class="nw">ChatGPT 商家推薦！</span><br><span class="nw">搶佔 AI 精準流量！</span></p>
+            </div>
+            <div class="cx-info">
+              <p class="cx-eyebrow">CASE 02｜電商零售・To C / To B</p>
+              <h3>敘思花藝 SÜSS</h3>
+              <p class="cx-line">精緻花藝電商，優化節慶轉換與訂單成長</p>
+              <div class="case-nums">
+                <div><b>17<small>倍</small></b><span>首頁關鍵字，<span class="nw">超過原方案保證</span></span></div>
+                <div><b>6<small>倍</small></b><span>AIO 版位霸佔，<span class="nw">超過原方案保證</span></span></div>
+              </div>
+              <p class="case-ai"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.3 6.2 6.2 2.3-6.2 2.3L12 19.5l-2.3-6.2L3.5 11l6.2-2.3z"/></svg>AI 精準推薦：永生花、乾燥花</p>
+            </div>
+          </div>
+        </div>
+        <div class="cx-item">
+          <button class="cx-mini" type="button" aria-label="查看杏子中醫診所的成果">
+            <span class="cx-no">03</span><span class="cx-tag">健康醫療</span><span class="cx-name">杏子中醫</span>
+            <span class="cx-stat"><b>620<small>%</small></b><em>SEO 流量成長</em></span>
+            <span class="cx-plus" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span>
+          </button>
+          <div class="cx-full">
+            <div class="cx-shot">
+              <img src="images/cases/xingzi-ai.png" alt="Google 搜尋「推薦 新豐街 中醫」：杏子中醫出現在 AI 摘要第一名與自然排名" width="536" height="482" loading="lazy">
+              <p class="cx-cap"><span class="nw">在地診所推薦前 10 名</span><br><span class="nw">＆搶佔 AI 摘要！</span></p>
+            </div>
+            <div class="cx-info">
+              <p class="cx-eyebrow">CASE 03｜健康醫療・To C</p>
+              <h3>杏子中醫診所</h3>
+              <p class="cx-line">在地品牌，佈局地區搜尋與門診名單</p>
+              <div class="case-nums">
+                <div><b>620<small>%</small></b><span>SEO 流量成長</span></div>
+                <div><b>+669<small>個</small></b><span><span class="nw">關鍵字排名</span><span class="nw">前 10 名</span></span></div>
+              </div>
+              <p class="case-ai"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.3 6.2 6.2 2.3-6.2 2.3L12 19.5l-2.3-6.2L3.5 11l6.2-2.3z"/></svg>AI 摘要、ChatGPT 推薦的在地中醫</p>
+            </div>
+          </div>
+        </div>
+        <div class="cx-item">
+          <button class="cx-mini" type="button" aria-label="查看億進寢具的成果">
+            <span class="cx-no">04</span><span class="cx-tag">零售連鎖</span><span class="cx-name">億進寢具 Countess</span>
+            <span class="cx-stat"><b>+660<small>個</small></b><em>前 10 名關鍵字</em></span>
+            <span class="cx-plus" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span>
+          </button>
+          <div class="cx-full">
+            <div class="cx-shot">
+              <img src="images/cases/countess-ai.png" alt="Gemini 推薦台南絲光棉寢具：提及台南億進寢具生活館" width="534" height="459" loading="lazy">
+              <p class="cx-cap"><span class="nw">Gemini 重要字詞，</span><br><span class="nw">獲得提及＆排名！</span></p>
+            </div>
+            <div class="cx-info">
+              <p class="cx-eyebrow">CASE 04｜零售連鎖・To C</p>
+              <h3>億進寢具 Countess</h3>
+              <p class="cx-line">實體零售連鎖型，強化電商＆門市導客</p>
+              <div class="case-nums">
+                <div><b>+660<small>個</small></b><span><span class="nw">關鍵字排名</span><span class="nw">前 10 名</span></span></div>
+                <div><b>+22<small>萬</small></b><span>累積曝光次數</span></div>
+              </div>
+              <p class="case-ai"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.3 6.2 6.2 2.3-6.2 2.3L12 19.5l-2.3-6.2L3.5 11l6.2-2.3z"/></svg>AIO 摘要精準卡位，提升電商轉化率</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cs-ctrl">
+        <p class="cx-count"><b>01</b> / 04</p>
+        <div class="cs-arrows">
+          <button class="cs-btn cs-prev" type="button" aria-label="上一個案例"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
+          <button class="cs-btn cs-next" type="button" aria-label="下一個案例"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        </div>
+      </div>
+    </div>
+    <div class="inds rv"><em><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.3 6.2 6.2 2.3-6.2 2.3L12 19.5l-2.3-6.2L3.5 11l6.2-2.3z"/></svg>各產業都有成功案例</em><span>空間建築</span><span>健康醫療</span><span>旅遊休閒</span><span>電商零售</span><span>教育培訓</span></div>
+  </div>
+</section>
+
+<!-- FLOW -->
+<section class="dark">
+  <div class="wrap">
+    <div class="head rv">
+      <h2>從填表到拿到報告，只要 4 步</h2>
+    </div>
+    <div class="flow">
+      <div class="rv"><h3>填寫表單</h3><p>留下網址與聯絡方式，1 分鐘完成</p></div>
+      <div class="rv"><h3>顧問聯繫</h3><p>了解產業、目標與競爭狀況</p></div>
+      <div class="rv"><h3>交付健檢報告</h3><p>SEO＋GEO 完整分析，免費贈送</p></div>
+      <div class="rv"><h3>說明與建議</h3><p>解讀報告與方案，不合作也沒關係</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq light">
+  <div class="wrap">
+    <div class="rv">
+      <h2>常見問題</h2>
+      <p class="sub">還有疑問？加 LINE 直接問</p>
+      <a class="btn" style="margin-top:1.6rem;background:#06C755;color:#fff;box-shadow:none" href="https://line.me/ti/p/@wp.dog" target="_blank" rel="noopener">LINE @wp.dog</a>
+    </div>
+    <div class="rv">
+      <details open><summary>免費健檢真的不收費嗎？</summary><p>是的，健檢與報告完全免費，也不需要綁約。報告說明後，是否合作由你決定。</p></details>
+      <details><summary>SEO 費用怎麼算？</summary><p>依關鍵字難度、產業競爭與目標規劃，採每季固定費用，預算好控制，並有關鍵字＋AI 摘要雙重保證。</p></details>
+      <details><summary>和一般 SEO 公司、SEO 代操有什麼不同？</summary><p>我們同時優化 Google 排名與 AI 提及，提供 3,000～4,000 字含製圖長文、站外高權重連結、不限次數免費顧問，以及專屬客戶群組。</p></details>
+      <details><summary>GEO 是什麼？跟 SEO 衝突嗎？</summary><p>GEO 是讓 ChatGPT、Gemini 等 AI 在回答時提及、引用你的品牌。兩者不衝突，SEO 是 GEO 的基礎，建議一起做。</p></details>
+      <details><summary>送的 Google 廣告代操包含什麼？</summary><p>SEO 需要數月累積，廣告能用最短時間搶佔首頁曝光。搭配 SEO 方案贈送 Google 廣告代操，詳細內容由顧問依需求說明。</p></details>
+      <details><summary>沒達標怎麼辦？</summary><p>合作期間有期中／期末 KPI 驗收。若未達標，會先暫停收款並免費延期服務，直到達成目標。</p></details>
+      <details><summary>多久可以看到成效？</summary><p>一般約 3～6 個月開始在 Google 排名與 AI 回答中看到成效，SEO 與 GEO 都是可長期累積的資產。</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- FORM -->
+<section class="form-sec dark" id="apply">
+  <span class="sphere" style="width:520px;height:520px;right:-200px;bottom:-200px"></span>
+  <div class="wrap">
+    <div class="rv">
+      <h2><span class="nw">花 1 分鐘，</span><br><span class="nw">看清你在</span><span class="nw"><span class="hl">Google 和 AI</span> 中的位置</span></h2>
+      <p class="lead">填寫表單，顧問會盡快與你聯繫，並安排免費 SEO＋GEO 健檢。</p>
+      <ul class="ticks">
+        <li>SEO＋GEO 完整健檢報告</li>
+        <li>AI 提及率、網站體質、關鍵字現況</li>
+        <li>顧問一對一說明，不綁約</li>
+      </ul>
+      <span class="scarce"><i></i>為確保報告品質，每月名額有限</span>
+      <div class="contact">
+        <span>LINE：<a href="https://line.me/ti/p/@wp.dog" target="_blank" rel="noopener">@wp.dog</a></span>
+        <span>Email：<a href="mailto:service@frankknow.co">service@frankknow.co</a></span>
+        <span>服務時間：週一至週五 09:00–18:00</span>
+      </div>
+    </div>
+
+    <form id="leadForm" class="rv" novalidate>
+      <div class="field full">
+        <label for="site">網站網址 <span class="req">*</span></label>
+        <input id="site" name="site" type="text" inputmode="url" placeholder="例如 www.yourbrand.com" required>
+        <span class="msg">請填寫網站網址</span>
+      </div>
+      <div class="field">
+        <label for="name">姓名 <span class="req">*</span></label>
+        <input id="name" name="name" type="text" autocomplete="name" required>
+        <span class="msg">請填寫姓名</span>
+      </div>
+      <div class="field">
+        <label for="phone">電話或 LINE ID <span class="req">*</span></label>
+        <input id="phone" name="phone" type="text" autocomplete="tel" required>
+        <span class="msg">請填寫電話或 LINE ID</span>
+      </div>
+      <div class="field full">
+        <label for="email">Email <span class="req">*</span></label>
+        <input id="email" name="email" type="email" autocomplete="email" placeholder="報告將寄到這個信箱" required>
+        <span class="msg">請填寫正確的 Email</span>
+      </div>
+      <div class="field full">
+        <span class="lbl">有興趣的方案 <span class="opt">（選填，可複選）</span></span>
+        <div class="chips">
+          <label><input type="checkbox" name="plan" value="AI SEO＋廣告投放"><span>AI SEO＋廣告投放</span></label>
+          <label><input type="checkbox" name="plan" value="保證 GEO 提及"><span>保證 GEO 提及</span></label>
+          <label><input type="checkbox" name="plan" value="SEO/GEO＋網頁設計"><span>SEO/GEO＋網頁設計</span></label>
+          <label><input type="checkbox" name="plan" value="還不確定"><span>還不確定</span></label>
+        </div>
+      </div>
+      <div class="field full">
+        <label for="question">想被 AI 提及的問題 <span class="opt">（選填）</span></label>
+        <textarea id="question" name="question" placeholder="例如：台中推薦的牙醫診所？"></textarea>
+      </div>
+      <input type="hidden" name="utm_source"><input type="hidden" name="utm_medium"><input type="hidden" name="utm_campaign"><input type="hidden" name="utm_term"><input type="hidden" name="utm_content">
+      <button class="btn" type="submit">免費取得健檢報告 →</button>
+      <p class="privacy">資料僅用於健檢與聯繫，不會提供給第三方。</p>
+      <div class="done" role="status">
+        <h3>申請成功！</h3>
+        <p>顧問會盡快與你聯繫。想更快收到回覆，可以直接加 LINE。</p>
+        <a class="btn" href="https://line.me/ti/p/@wp.dog" target="_blank" rel="noopener">加 LINE @wp.dog</a>
+      </div>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="f-cols">
+      <div class="f-col f-about">
+        <h4>關於我們</h4>
+        <p>犬哥網站，致力幫您提升網路營收，<br>從網站建置到行銷，一條龍解決方案。</p>
+        <p>協助個人、企業拓展網路生意！</p>
+        <ul class="f-social">
+          <li><a class="fb" href="https://www.facebook.com/wp.dog" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M14 13.5h2.5l1-4H14v-2c0-1 .5-2 2-2h1.6V2.1S16.3 2 15 2c-2.8 0-4.5 1.7-4.5 4.7v2.8H8v4h2.5V22H14z"/></svg></a></li>
+          <li><a class="yt" href="https://www.youtube.com/c/wpdog?sub_confirmation=1" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 24 24"><path d="M23 7.5a3 3 0 0 0-2.1-2.1C19 5 12 5 12 5s-7 0-8.9.4A3 3 0 0 0 1 7.5 31 31 0 0 0 .6 12a31 31 0 0 0 .4 4.5 3 3 0 0 0 2.1 2.1C5 19 12 19 12 19s7 0 8.9-.4a3 3 0 0 0 2.1-2.1 31 31 0 0 0 .4-4.5 31 31 0 0 0-.4-4.5zM9.8 15V9l5.2 3z"/></svg></a></li>
+          <li><a class="ig" href="https://www.instagram.com/wp.dog/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 8.2a3.2 3.2 0 1 1 0-6.4 3.2 3.2 0 0 1 0 6.4zM17.3 5.5a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4zM16.5 2h-9A5.5 5.5 0 0 0 2 7.5v9A5.5 5.5 0 0 0 7.5 22h9a5.5 5.5 0 0 0 5.5-5.5v-9A5.5 5.5 0 0 0 16.5 2zm3.7 14.5a3.7 3.7 0 0 1-3.7 3.7h-9a3.7 3.7 0 0 1-3.7-3.7v-9a3.7 3.7 0 0 1 3.7-3.7h9a3.7 3.7 0 0 1 3.7 3.7z"/></svg></a></li>
+        </ul>
+      </div>
+      <div class="f-col">
+        <h4>公司資訊</h4>
+        <ul class="f-info">
+          <li><svg viewBox="0 0 24 24"><path d="M4 22V2h12v6h4v14h-7v-4h-2v4zm3-17v2h2V5zm4 0v2h2V5zM7 9v2h2V9zm4 0v2h2V9zm-4 4v2h2v-2zm4 0v2h2v-2zm6-1v2h2v-2zm0 4v2h2v-2z"/></svg><span>小犬科技有限公司</span></li>
+          <li><svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg><span>新北市中和區連城路 89 巷 3 號 3F</span></li>
+          <li><svg viewBox="0 0 24 24"><path d="M12 3C6.5 3 2 6.6 2 11c0 3.9 3.5 7.2 8.3 7.9.3.1.8.2.9.5.1.3.1.7 0 1l-.1.9c0 .3-.2 1 .9.5s5.9-3.5 8-6C21.3 14.3 22 12.7 22 11c0-4.4-4.5-8-10-8z"/></svg><a href="https://line.me/ti/p/@wp.dog" target="_blank" rel="noopener">@wp.dog（Line 官方 ID）</a></li>
+          <li><svg viewBox="0 0 24 24"><path d="M2 5h20v14H2zm2 2v.6l8 5 8-5V7zm0 3v7h16v-7l-8 5z"/></svg><span>service@frankknow.co</span></li>
+          <li><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 5h-2v6.2l5.2 3.1 1-1.6-4.2-2.5z"/></svg><span>09:00 ~ 18:00（週一至週五）</span></li>
+        </ul>
+      </div>
+      <div class="f-col">
+        <h4>犬哥相關服務</h4>
+        <ul class="f-links">
+          <li><a href="https://frankknow.com/web-design-service/">客製網頁設計</a></li>
+          <li><a href="https://frankknow.com/seo-service/">SEO 行銷服務</a></li>
+          <li><a href="https://frankknow.com/ads-service/">廣告投放服務</a></li>
+          <li><a href="https://frankknow.com/portfolio/">作品案例展示</a></li>
+        </ul>
+      </div>
+      <div class="f-col">
+        <h4>網站連結</h4>
+        <ul class="f-links">
+          <li><a href="https://frankknow.net/" target="_blank" rel="noopener">犬哥學院</a></li>
+          <li><a href="https://frankknow.com/about-us/">公司簡介</a></li>
+          <li><a href="https://frankknow.com/contact/">聯絡我們</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="f-copy">© 犬哥網站，協助您的企業數位化！</p>
+  </div>
+</footer>
+
+<div class="mbar" id="mbar">
+  <a class="btn js-cta" href="#apply">免費申請健檢</a>
+  <a class="btn ln" href="https://line.me/ti/p/@wp.dog" target="_blank" rel="noopener">LINE</a>
+</div>
+
+<script>
+// 斷句控制：把文字依標點切成不可拆的小段，換行只會發生在標點之後
+(() => {
+  const SEG = /[^，、。！？：；]+[，、。！？：；）」]*|[，、。！？：；）」]+/g;
+  // 副標的 [ ] 直接黏在第一段與最後一段文字上，避免括號單獨掉到下一行
+  document.querySelectorAll('.sub').forEach(el => { el.textContent = '[ ' + el.textContent.trim() + ' ]'; });
+  const targets = document.querySelectorAll('main h1, main h2, main h3, main h4, main p, main li, main summary, .callout');
+  targets.forEach(el => {
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(t => {
+      const v = t.nodeValue;
+      if (!v.trim() || t.parentElement.closest('.nw')) return;
+      const parts = v.trim().match(SEG);
+      if (!parts) return;
+      const frag = document.createDocumentFragment();
+      if (/^\s/.test(v)) frag.append(' ');
+      parts.forEach(p => { const s = document.createElement('span'); s.className = 'nw'; s.textContent = p; frag.append(s); });
+      if (/\s$/.test(v)) frag.append(' ');
+      // flex / grid 容器裡要包一層，避免每一段變成獨立欄位
+      if (/flex|grid/.test(getComputedStyle(t.parentElement).display)) {
+        const w = document.createElement('span'); w.append(frag); t.replaceWith(w);
+      } else t.replaceWith(frag);
+    });
+  });
+})();
+
+// 文氏圖：圖片載入完成才開始播放進場動畫
+document.querySelectorAll('.circles').forEach(c => {
+  const im = c.querySelector('.full'); const go = () => c.classList.add('ready');
+  if (im.complete) go(); else { im.addEventListener('load', go); im.addEventListener('error', go); }
+});
+
+// 成功案例：一次只展開一個品牌，其他收合；左右箭頭或點品牌切換
+(() => {
+  const box = document.querySelector('.cx'); if (!box) return;
+  const items = [...box.querySelectorAll('.cx-item')];
+  const root = box.closest('.cases');
+  const count = root.querySelector('.cx-count b');
+  let cur = 0;
+  const set = i => {
+    cur = (i + items.length) % items.length;
+    items.forEach((it, k) => {
+      const on = k === cur;
+      it.classList.toggle('on', on);
+      it.querySelector('.cx-mini').setAttribute('aria-expanded', String(on));
+    });
+    count.textContent = String(cur + 1).padStart(2, '0');
+  };
+  items.forEach((it, k) => it.querySelector('.cx-mini').addEventListener('click', () => set(k)));
+  root.querySelector('.cs-prev').addEventListener('click', () => set(cur - 1));
+  root.querySelector('.cs-next').addEventListener('click', () => set(cur + 1));
+  set(0);
+})();
+
+// 首屏數據卡：+237% 從 0 往上跳（減少動態效果時直接顯示結果）
+(() => {
+  const num = document.querySelector('.hv-num');
+  if (!num || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const end = +num.dataset.to; num.textContent = '0';
+  setTimeout(() => {
+    const t0 = Date.now(), dur = 1400;
+    const timer = setInterval(() => {
+      const p = Math.min(1, (Date.now() - t0) / dur);
+      num.textContent = Math.round(end * (1 - Math.pow(1 - p, 3)));
+      if (p >= 1) clearInterval(timer);
+    }, 30);
+  }, 3600);
+})();
+
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('on'); io.unobserve(e.target); } }), { threshold: .12 });
+document.querySelectorAll('.rv').forEach(el => { if (!el.closest('.hero')) io.observe(el); });
+
+const mbar = document.getElementById('mbar');
+new IntersectionObserver(([e]) => mbar.classList.toggle('hide', e.isIntersecting), { threshold: .15 }).observe(document.getElementById('apply'));
+
+// 帶入廣告 UTM 參數
+const params = new URLSearchParams(location.search);
+['utm_source','utm_medium','utm_campaign','utm_term','utm_content'].forEach(k => {
+  const el = document.querySelector(`[name="${k}"]`); if (el) el.value = params.get(k) || '';
+});
+
+document.querySelectorAll('.js-cta').forEach(a => a.addEventListener('click', () => {
+  setTimeout(() => document.getElementById('site').focus({ preventScroll: true }), 700);
+}));
+
+const form = document.getElementById('leadForm');
+const emailOk = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+form.querySelectorAll('input[required]').forEach(i => i.addEventListener('input', () => i.closest('.field').classList.remove('err')));
+form.addEventListener('submit', e => {
+  e.preventDefault();
+  let first = null;
+  form.querySelectorAll('input[required]').forEach(i => {
+    const bad = !i.value.trim() || (i.type === 'email' && !emailOk(i.value.trim()));
+    i.closest('.field').classList.toggle('err', bad);
+    if (bad && !first) first = i;
+  });
+  if (first) { first.focus(); return; }
+
+  const data = Object.fromEntries(new FormData(form));
+  data.plan = [...form.querySelectorAll('[name=plan]:checked')].map(c => c.value).join('、');
+
+  // TODO: 串接表單後端（Google Apps Script、CRM 或 WordPress 表單 API）
+  // fetch('YOUR_ENDPOINT', { method: 'POST', body: JSON.stringify(data) });
+  console.log('lead', data);
+
+  form.classList.add('sent');
+  // 轉換追蹤：window.gtag && gtag('event', 'generate_lead');
+});
+</script>
+</body>
+</html>
